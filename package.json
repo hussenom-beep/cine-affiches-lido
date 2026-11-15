@@ -1,0 +1,15 @@
+{
+  "name": "cine-affiches-le-lido",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Ciné Affiches — Le Lido : vitrine publique et gestion des affiches (un seul index.html + fonctions serveur Vercel)",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "check": "node scripts/check-syntax.mjs",
+    "test:logic": "node --test tests/logic/logic.test.mjs",
+    "test:api": "node --test tests/api/api.test.mjs",
+    "test:db": "node tests/db/run-db-tests.mjs"
+  },
+  "engines": { "node": ">=20" }
+}
