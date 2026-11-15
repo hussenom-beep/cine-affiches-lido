@@ -2864,33 +2864,62 @@ ADMIN_PAGES.add = async (page) => {
    Q. INVENTAIRE PDF (A4, miniatures ≈ 3 cm, cases de suivi au stylo)
    ═══════════════════════════════════════════════════════════════════════ */
 const THUMB_PX = { w: 120, h: 180 }
-async function thumbDataUrl(url) {
+async function fetchImageBlob(url, init = {}) {
   const ctrl = new AbortController()
   const timer = setTimeout(() => ctrl.abort(), 15000)
   try {
-    const res = await fetch(url, { mode: 'cors', signal: ctrl.signal })
+    const res = await fetch(url, { ...init, signal: ctrl.signal })
     if (!res.ok) throw new Error(String(res.status))
-    const bmp = await createImageBitmap(await res.blob())
-    const c = document.createElement('canvas')
-    c.width = THUMB_PX.w; c.height = THUMB_PX.h
-    const ctx = c.getContext('2d')
-    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height)
-    const k = Math.max(c.width / bmp.width, c.height / bmp.height)
-    ctx.drawImage(bmp, (c.width - bmp.width * k) / 2, (c.height - bmp.height * k) / 2, bmp.width * k, bmp.height * k)
-    bmp.close?.()
-    return c.toDataURL('image/jpeg', 0.82)
+    const blob = await res.blob()
+    if (!blob.size || (blob.type && !blob.type.startsWith('image/'))) throw new Error('not an image')
+    return blob
   } finally { clearTimeout(timer) }
+}
+/** Décode une image (createImageBitmap, ou <img> en secours pour les anciens navigateurs). */
+async function decodeImage(blob) {
+  try { return await createImageBitmap(blob) } catch {}
+  const u = URL.createObjectURL(blob)
+  try {
+    const im = new Image()
+    im.src = u
+    await im.decode()
+    return im
+  } finally { setTimeout(() => URL.revokeObjectURL(u), 1000) }
+}
+/**
+ * Miniature JPEG (data URL) pour le PDF.
+ * 1) Lecture directe SANS le cache du navigateur : une affiche déjà affichée à l'écran est en cache
+ *    sans autorisation « CORS », ce qui ferait échouer la lecture.
+ * 2) En secours : relais du site (/api/image), réservé aux administrateurs.
+ */
+async function thumbDataUrl(url, token) {
+  let blob
+  try { blob = await fetchImageBlob(url, { mode: 'cors', cache: 'no-store', credentials: 'omit' }) } catch {
+    blob = await fetchImageBlob(`/api/image?src=${encodeURIComponent(url)}`, { headers: token ? { authorization: `Bearer ${token}` } : {} })
+  }
+  const bmp = await decodeImage(blob)
+  const w = bmp.width || bmp.naturalWidth, h = bmp.height || bmp.naturalHeight
+  if (!w || !h) throw new Error('image vide')
+  const c = document.createElement('canvas')
+  c.width = THUMB_PX.w; c.height = THUMB_PX.h
+  const ctx = c.getContext('2d')
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height)
+  const k = Math.max(c.width / w, c.height / h)
+  ctx.drawImage(bmp, (c.width - w * k) / 2, (c.height - h * k) / 2, w * k, h * k)
+  bmp.close?.()
+  return c.toDataURL('image/jpeg', 0.82)
 }
 async function prepareThumbs(rows, onProgress) {
   const ids = [...new Set(rows.map((r) => r.visualId))]
   const out = {}
+  const token = (await sb.auth.getSession()).data.session?.access_token
   let i = 0, done = 0
   const worker = async () => {
     while (i < ids.length) {
       const id = ids[i++]
       const v = findVisual(id)
       const url = v ? img.visual(v, 'thumb') : null
-      out[id] = url ? await thumbDataUrl(url).catch(() => null) : null
+      out[id] = url ? await thumbDataUrl(url, token).catch((err) => { console.warn('[pdf] miniature indisponible', url, err?.message); return null }) : null
       onProgress(++done, ids.length)
     }
   }
