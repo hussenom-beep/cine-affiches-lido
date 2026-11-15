@@ -306,6 +306,8 @@ body.pub .muted { color: var(--ink-3); }
 .pub-foot { border-top: 1px solid var(--line); background: #080706; color: var(--ink-3); font-size: 13.5px; text-align: center; }
 .pub-foot .container { padding-top: 34px; padding-bottom: calc(34px + var(--safe-b)); display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .pub-foot .wordmark b { color: var(--ink-2); }
+.foot-link { border: 0; background: none; padding: 6px 10px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-4); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--ink-5); }
+.foot-link:hover { color: var(--gold-400); }
 body.pub .poster { background: linear-gradient(135deg, #1c1711, #2a2219); }
 body.pub .poster .missing { color: var(--ink-4); }
 body.pub .skeleton { background: #1c1711; }
@@ -1359,7 +1361,7 @@ function mountPublicShell() {
     <div class="ornament" aria-hidden="true"><i></i></div>
     <div id="pub-foot-brand">${wordmarkHtml({}, 'md')}</div>
     <p id="pub-foot-note">Catalogue mis à jour selon les stocks du cinéma.</p>
-    <p class="xs" style="color:var(--ink-4);max-width:520px">Informations et visuels de films : TMDB. Ce site utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.</p>
+    <button type="button" class="foot-link" data-act="credits">Crédits</button>
   </div></footer>`)
 
   const input = $('#pub-q')
@@ -1382,6 +1384,9 @@ function mountPublicShell() {
   })
   $('#app').addEventListener('click', (e) => {
     if (e.target.closest('[data-act="retry"]')) { PUB.mounted = false; render() }
+    if (e.target.closest('[data-act="credits"]')) openModal({ title: 'Crédits', size: 'sm', body: html`<div class="stack">
+      <p>Informations et visuels de films fournis par <b>TMDB</b> (The Movie Database).</p>
+      <p class="muted small">Ce site utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.</p></div>` })
     if (e.target.closest('[data-act="reset"]')) { input.value = ''; setQuery(new URLSearchParams()); $('#pub-sort').value = 'title-asc'; renderPublicResults() }
   })
   new IntersectionObserver((entries) => {
