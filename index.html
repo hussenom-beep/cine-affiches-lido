@@ -1912,9 +1912,9 @@ function qtyControl(row) {
   const q = row.stock.quantity
   const d = `data-v="${esc(row.visual.id)}" data-f="${row.format.id}" data-l="${esc(row.location.id)}"`
   return html`<div class="qty">
-    <button type="button" ${raw(d)} data-q="minus" ${attr(q <= 0, 'disabled')} aria-label="Retirer un exemplaire (${row.format.label}, ${row.location.name})">${icon('minus')}</button>
+    <button type="button" ${raw(d)} data-qty="minus" ${attr(q <= 0, 'disabled')} aria-label="Retirer un exemplaire (${row.format.label}, ${row.location.name})">${icon('minus')}</button>
     <output class="${q === 0 ? 'zero' : ''}" aria-label="${q} exemplaire${q > 1 ? 's' : ''}">${q}</output>
-    <button type="button" class="plus" ${raw(d)} data-q="plus" aria-label="Ajouter un exemplaire (${row.format.label}, ${row.location.name})">${icon('plus')}</button></div>`
+    <button type="button" class="plus" ${raw(d)} data-qty="plus" aria-label="Ajouter un exemplaire (${row.format.label}, ${row.location.name})">${icon('plus')}</button></div>`
 }
 
 function visualCard(v, { locationId } = {}) {
@@ -1937,10 +1937,10 @@ function visualCard(v, { locationId } = {}) {
 /** Clic sur −/+ et « Remettre en stock » dans n'importe quelle page d'administration. */
 function bindStockControls(root, after) {
   root.addEventListener('click', async (e) => {
-    const b = e.target.closest('[data-q]')
+    const b = e.target.closest('button[data-qty]')
     if (b) {
       const args = { visualId: b.dataset.v, formatId: Number(b.dataset.f), locationId: b.dataset.l }
-      if (b.dataset.q === 'plus') return busy(b, () => moveStock({ ...args, delta: 1, reason: 'stock_in' }).then((r) => r && after?.()))
+      if (b.dataset.qty === 'plus') return busy(b, () => moveStock({ ...args, delta: 1, reason: 'stock_in' }).then((r) => r && after?.()))
       return removeSheet(args, after)
     }
     const add = e.target.closest('[data-add-stock]')
