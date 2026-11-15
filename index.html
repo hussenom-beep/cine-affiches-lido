@@ -3,17 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#16302a">
+<meta name="theme-color" content="#0c0a08">
 <meta name="description" content="Les affiches de films disponibles au cinéma Le Lido.">
 <meta name="robots" content="index, follow" id="meta-robots">
-<title>Ciné Affiches — Le Lido</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2316302a'/%3E%3Cg fill='none' stroke='%23d4b06c' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 30h36v16a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4z'/%3E%3Cpath d='m13.5 24.5 34-8.6 1.5 5.8-34 8.6z'/%3E%3Cpath d='m22 21.8 4.6 6.2M32 19.3l4.6 6.2'/%3E%3C/g%3E%3C/svg%3E">
+<title>Affiches Le Lido</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230c0a08'/%3E%3Cg fill='none' stroke='%23c9a45c' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 30h36v16a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4z'/%3E%3Cpath d='m13.5 24.5 34-8.6 1.5 5.8-34 8.6z'/%3E%3Cpath d='m22 21.8 4.6 6.2M32 19.3l4.6 6.2'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/fraunces@5.3.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/playfair-display@5.3.0/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/playfair-display@5.3.0/wght-italic.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/manrope@5.3.0/index.css">
 <!--
   ═══════════════════════════════════════════════════════════════════════
-   CINÉ AFFICHES — LE LIDO
+   AFFICHES LE LIDO
    Application complète en un seul fichier : vitrine publique (/) et
    administration privée (/espace-interne).
 
@@ -26,7 +27,7 @@
 <style>
 /* ═════════════════════ 1. Thème ═════════════════════ */
 :root {
-  --brand: #1b3a32;
+  --brand: #17120c;
   --brand-900: color-mix(in oklab, var(--brand) 72%, black);
   --brand-700: color-mix(in oklab, var(--brand) 88%, white);
   --brand-600: color-mix(in oklab, var(--brand) 74%, white);
@@ -34,9 +35,11 @@
   --brand-100: color-mix(in oklab, var(--brand) 13%, white);
   --brand-50:  color-mix(in oklab, var(--brand) 6%, white);
 
-  --gold-300: #e2c68d; --gold-400: #d4b06c; --gold-500: #c09650; --gold-600: #9d7737; --gold-700: #7a5b29; --gold-100: #f6edd8;
+  --gold-300: #e6cc93; --gold-400: #d6b36d; --gold-500: #c9a45c; --gold-600: #a5823f; --gold-700: #7a5f2a; --gold-100: #f6edd8;
+  --accent: #e8772e; --accent-600: #cc6220; --accent-ink: #1c0e04; --accent-bg: #fdeee2;
+  --night: #0c0a08; --night-2: #14100b;
 
-  --bg: #fbf8f2; --surface: #ffffff; --surface-2: #f5f0e6; --line: #e7dfd0; --line-2: #d8ccb6;
+  --bg: #f8f4ec; --surface: #ffffff; --surface-2: #f5f0e6; --line: #e7dfd0; --line-2: #d8ccb6;
   --ink: #211d18; --ink-2: #463f36; --ink-3: #6b6357; --ink-4: #9a9184; --ink-5: #c2baad;
   --anthracite: #23272a;
 
@@ -45,12 +48,12 @@
   --warn: #7a5b29; --warn-bg: #f8efd9; --warn-line: #ead7a8;
 
   --font: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --display: 'Playfair Display Variable', ui-serif, Georgia, serif;
 
   --r-sm: 10px; --r: 14px; --r-lg: 20px; --r-xl: 28px;
   --shadow-1: 0 1px 2px rgb(33 29 24 / .05), 0 4px 14px -6px rgb(33 29 24 / .12);
-  --shadow-poster: 0 2px 4px rgb(12 28 24 / .12), 0 14px 30px -12px rgb(12 28 24 / .42);
-  --shadow-lift: 0 8px 16px rgb(12 28 24 / .14), 0 28px 48px -16px rgb(12 28 24 / .5);
+  --shadow-poster: 0 2px 4px rgb(16 11 6 / .12), 0 14px 30px -12px rgb(16 11 6 / .42);
+  --shadow-lift: 0 8px 16px rgb(16 11 6 / .14), 0 28px 48px -16px rgb(16 11 6 / .5);
   --safe-b: env(safe-area-inset-bottom, 0px);
   --ease: cubic-bezier(.2, .8, .2, 1);
 }
@@ -201,7 +204,7 @@ input[type=number] { -moz-appearance: textfield; }
 
 /* Fenêtres : panneau en bas sur mobile, centrées sur ordinateur */
 .overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
-.overlay .backdrop { position: absolute; inset: 0; background: rgb(10 22 19 / .58); backdrop-filter: blur(2px); animation: fade .2s ease-out both; }
+.overlay .backdrop { position: absolute; inset: 0; background: rgb(14 10 6 / .58); backdrop-filter: blur(2px); animation: fade .2s ease-out both; }
 .dialog { position: relative; width: 100%; max-height: 92dvh; display: flex; flex-direction: column; background: var(--bg); border-radius: 24px 24px 0 0; box-shadow: var(--shadow-lift); animation: sheet .26s var(--ease) both; outline: none; overflow: hidden; }
 .dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px 14px 20px; border-bottom: 1px solid var(--line); }
 .dialog-head h2 { font-family: var(--display); font-size: 19px; font-weight: 600; }
@@ -214,7 +217,7 @@ input[type=number] { -moz-appearance: textfield; }
   .dialog.sm { max-width: 420px; } .dialog.lg { max-width: 760px; } .dialog.xl { max-width: 1040px; }
   .dialog-foot { padding-bottom: 12px; }
 }
-.lightbox { position: fixed; inset: 0; z-index: 70; background: rgb(8 18 16 / .95); display: flex; flex-direction: column; animation: fade .2s both; }
+.lightbox { position: fixed; inset: 0; z-index: 70; background: rgb(8 6 4 / .96); display: flex; flex-direction: column; animation: fade .2s both; }
 .lightbox .top { display: flex; justify-content: flex-end; padding: 12px; }
 .lightbox .close { width: 46px; height: 46px; border-radius: 50%; border: 0; background: rgb(255 255 255 / .12); color: #fff; display: flex; align-items: center; justify-content: center; }
 .lightbox .stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 0 12px 12px; overflow: auto; touch-action: pinch-zoom; }
@@ -230,61 +233,119 @@ input[type=number] { -moz-appearance: textfield; }
 
 .boot { min-height: 100dvh; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--ink-3); font-weight: 600; }
 
-/* ═════════════════════ 4. Vitrine publique ═════════════════════ */
-.pub-hero { position: relative; overflow: hidden; background: var(--brand-900); color: #f6f0e4; }
-.pub-hero::before { content: ''; position: absolute; right: -90px; top: -110px; width: 320px; height: 320px; border-radius: 50%; background: rgb(212 176 108 / .12); filter: blur(40px); }
+/* ═════════════════════ 4. Vitrine publique (thème sombre : noir, or, orange) ═════════════════════ */
 .container { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
 @media (min-width: 640px) { .container { padding: 0 24px; } }
 @media (min-width: 1024px) { .container { padding: 0 32px; } }
-.brandline { display: flex; align-items: center; gap: 12px; }
-.logo { width: 44px; height: 44px; border-radius: 14px; background: var(--brand); display: flex; align-items: center; justify-content: center; color: var(--gold-400); overflow: hidden; flex-shrink: 0; box-shadow: inset 0 0 0 1px rgb(212 176 108 / .3); }
-.logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; background: #fff; }
-.brandline b { font-family: var(--display); font-size: 18px; font-weight: 600; display: block; line-height: 1.1; }
-.brandline span { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-400); }
-.pub-hero h1 { font-family: var(--display); font-weight: 600; font-size: clamp(34px, 7vw, 54px); line-height: 1.04; letter-spacing: -.02em; margin-top: 28px; max-width: 720px; }
-.pub-hero h1 em { color: var(--gold-300); font-style: italic; }
-.pub-hero .tag { margin-top: 10px; max-width: 560px; color: rgb(246 240 228 / .75); }
-.pub-hero .search { margin-top: 22px; max-width: 660px; }
-.pub-hero .search .input { border: 0; height: 58px; box-shadow: var(--shadow-lift); }
-.pub-bar { position: sticky; top: 0; z-index: 20; background: rgb(251 248 242 / .9); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+
+/* Nom en lettres (remplacé par le logo dès qu'il est envoyé dans les réglages) */
+.wordmark { display: inline-flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; line-height: 1; }
+.wordmark small { font-family: var(--display); font-size: 12px; font-weight: 500; letter-spacing: .55em; margin-right: -.55em; text-transform: uppercase; color: var(--gold-500); }
+.wordmark b { font-family: var(--display); font-weight: 600; font-size: clamp(38px, 11vw, 60px); letter-spacing: .07em; margin-right: -.07em; text-transform: uppercase; margin-top: 6px; }
+.wordmark img { display: block; max-height: 76px; max-width: min(260px, 70vw); object-fit: contain; }
+.wordmark.sm { align-items: flex-start; }
+.wordmark.sm small { font-size: 9px; letter-spacing: .45em; }
+.wordmark.sm b { font-size: 21px; margin-top: 3px; letter-spacing: .06em; }
+.wordmark.sm img { max-height: 40px; max-width: 170px; }
+.wordmark.md b { font-size: 34px; }
+.wordmark.md img { max-height: 60px; }
+.ornament { display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--gold-500); }
+.ornament::before, .ornament::after { content: ''; height: 1px; width: 56px; background: linear-gradient(90deg, transparent, var(--gold-600)); }
+.ornament::after { transform: scaleX(-1); }
+.ornament i { width: 6px; height: 6px; transform: rotate(45deg); background: var(--gold-500); display: block; }
+
+body.pub {
+  --bg: #0c0a08; --surface: #16120d; --surface-2: #1e1912; --line: #2a2318; --line-2: #3e3322;
+  --ink: #f3ead9; --ink-2: #d8ccb5; --ink-3: #a69a82; --ink-4: #7b705c; --ink-5: #4f4737;
+  --shadow-1: 0 1px 2px rgb(0 0 0 / .4); --shadow-poster: 0 2px 6px rgb(0 0 0 / .5), 0 18px 34px -14px rgb(0 0 0 / .85);
+  --shadow-lift: 0 10px 24px rgb(0 0 0 / .55), 0 30px 60px -20px rgb(0 0 0 / .9);
+  color-scheme: dark; background: var(--bg); color: var(--ink);
+}
+body.pub ::selection { background: var(--accent); color: var(--accent-ink); }
+.pub-top { position: relative; text-align: center; padding: 30px 0 22px; overflow: hidden; }
+.pub-top::before { content: ''; position: absolute; left: 50%; top: -160px; width: 560px; height: 360px; transform: translateX(-50%); background: radial-gradient(closest-side, rgb(201 164 92 / .16), transparent); pointer-events: none; }
+.pub-top .container { position: relative; display: flex; flex-direction: column; align-items: center; }
+.pub-top .ornament { margin-top: 16px; }
+.pub-tag { margin-top: 12px; max-width: 520px; font-family: var(--display); font-style: italic; font-size: 16.5px; color: var(--ink-3); }
+.pub-top .search { width: 100%; max-width: 620px; margin-top: 20px; }
+body.pub .search .input { background: var(--surface); border-color: var(--line-2); color: var(--ink); box-shadow: none; height: 54px; }
+body.pub .search .input:focus { border-color: var(--gold-500); box-shadow: 0 0 0 4px rgb(201 164 92 / .14); }
+body.pub .search .icon { color: var(--gold-600); }
+.pub-bar { position: sticky; top: 0; z-index: 20; background: rgb(12 10 8 / .86); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .pub-bar .container { display: flex; align-items: center; gap: 10px; padding-top: 10px; padding-bottom: 10px; }
-.sort-select { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--surface); font-weight: 700; font-size: 14px; color: var(--ink-2); flex-shrink: 0; }
+body.pub .chip { background: transparent; border-color: var(--line-2); color: var(--gold-300); height: 36px; font-size: 13.5px; }
+body.pub .chip[aria-checked="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.sort-select { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--surface); font-weight: 700; font-size: 13.5px; color: var(--ink-2); flex-shrink: 0; }
+body.pub .sort-select { background: transparent; color: var(--gold-300); }
 .sort-select select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
 .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
-.section-title h2 { font-family: var(--display); font-size: 24px; font-weight: 600; letter-spacing: -.01em; display: flex; align-items: center; gap: 8px; }
-.grid-posters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; }
-@media (min-width: 640px) { .grid-posters { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 20px; } }
+.section-title h2 { font-family: var(--display); font-size: 24px; font-weight: 600; letter-spacing: -.005em; display: flex; align-items: center; gap: 8px; }
+.pub-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .26em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 5px; }
+body.pub .section-title h2 { font-size: 26px; }
+body.pub .muted { color: var(--ink-3); }
+.grid-posters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 14px; }
+@media (min-width: 640px) { .grid-posters { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 20px; } }
 @media (min-width: 900px) { .grid-posters { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (min-width: 1150px) { .grid-posters { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 @media (min-width: 1400px) { .grid-posters { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
-.pcard { display: flex; flex-direction: column; gap: 10px; text-decoration: none; color: inherit; border-radius: 14px; }
-.pcard .poster { transition: transform .3s var(--ease), box-shadow .3s; box-shadow: var(--shadow-poster); }
+.pcard { display: flex; flex-direction: column; gap: 11px; text-decoration: none; color: inherit; border-radius: 12px; -webkit-tap-highlight-color: transparent; }
+.pcard .poster { border-radius: 10px; transition: transform .35s var(--ease), box-shadow .35s; box-shadow: var(--shadow-poster); }
+.pcard .poster::after { box-shadow: inset 0 0 0 1px rgb(255 255 255 / .07); transition: box-shadow .3s; }
 .pcard:hover .poster, .pcard:focus-visible .poster { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
-.pcard h3 { font-family: var(--display); font-size: 15.5px; font-weight: 600; line-height: 1.25; }
-.pcard .meta { font-size: 13px; color: var(--ink-3); margin-top: -5px; }
-.fpills { display: flex; flex-wrap: wrap; gap: 5px; }
-.fpill { display: inline-flex; gap: 4px; align-items: center; height: 22px; padding: 0 8px; border-radius: 99px; background: var(--brand-50); border: 1px solid var(--brand-100); color: var(--brand); font-size: 11.5px; font-weight: 800; }
-.fpill i { font-style: normal; color: var(--gold-700); }
-.carousel { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 16px 10px; margin: 0 -16px; scroll-padding: 0 16px; }
-.carousel > * { flex: 0 0 42%; scroll-snap-align: start; }
-@media (min-width: 640px) { .carousel { margin: 0 -24px; padding: 4px 24px 10px; scroll-padding: 0 24px; } .carousel > * { flex-basis: 180px; } }
-@media (min-width: 1024px) { .carousel { margin: 0 -32px; padding: 4px 32px 10px; } }
-.pub-foot { border-top: 1px solid var(--line); background: var(--surface-2); color: var(--ink-3); font-size: 13.5px; }
-.pub-foot .container { padding-top: 28px; padding-bottom: calc(28px + var(--safe-b)); }
+.pcard:hover .poster::after, .pcard:focus-visible .poster::after, .pcard:active .poster::after { box-shadow: inset 0 0 0 1.5px var(--gold-500); }
+.pcard:active .poster { transform: scale(.985); }
+.pcard h3 { font-family: var(--display); font-size: 16px; font-weight: 600; line-height: 1.22; color: var(--ink); }
+.pcard .meta { font-size: 12.5px; color: var(--ink-3); margin-top: -6px; }
+.pcard .prices { font-size: 13px; font-weight: 700; color: var(--gold-400); letter-spacing: .01em; }
+.pcard .prices span { color: var(--ink-4); font-weight: 600; }
+.ribbon { position: absolute; left: 8px; top: 8px; z-index: 2; padding: 3px 8px; border-radius: 5px; background: var(--accent); color: var(--accent-ink); font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.carousel { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 16px 12px; margin: 0 -16px; scroll-padding: 0 16px; }
+.carousel > * { flex: 0 0 44%; scroll-snap-align: start; position: relative; }
+@media (min-width: 640px) { .carousel { margin: 0 -24px; padding: 4px 24px 12px; scroll-padding: 0 24px; } .carousel > * { flex-basis: 190px; } }
+@media (min-width: 1024px) { .carousel { margin: 0 -32px; padding: 4px 32px 12px; } }
+.pub-foot { border-top: 1px solid var(--line); background: #080706; color: var(--ink-3); font-size: 13.5px; text-align: center; }
+.pub-foot .container { padding-top: 34px; padding-bottom: calc(34px + var(--safe-b)); display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.pub-foot .wordmark b { color: var(--ink-2); }
+body.pub .poster { background: linear-gradient(135deg, #1c1711, #2a2219); }
+body.pub .poster .missing { color: var(--ink-4); }
+body.pub .skeleton { background: #1c1711; }
+body.pub .empty { background: rgb(255 255 255 / .02); border-color: var(--line-2); }
+body.pub .empty .ico { background: var(--surface-2); color: var(--gold-500); }
+body.pub .btn-secondary { background: var(--surface); border-color: var(--line-2); color: var(--ink); }
+body.pub .btn-secondary:hover:not(:disabled) { background: var(--surface-2); }
+body.pub .btn-primary { background: var(--accent); color: var(--accent-ink); }
+body.pub .btn-primary:hover:not(:disabled) { background: #f08a45; }
+body.pub .icon-btn { color: var(--ink-2); }
+body.pub .icon-btn:hover { background: rgb(255 255 255 / .08); }
+body.pub .toast { background: #1e1912; color: var(--ink); box-shadow: 0 0 0 1px var(--line-2), var(--shadow-lift); }
+body.pub .overlay .backdrop { background: rgb(0 0 0 / .72); }
+body.pub .dialog { background: var(--bg); box-shadow: 0 0 0 1px var(--line), var(--shadow-lift); }
 
 .detail { display: grid; }
-.detail .visual { background: var(--brand-900); padding: 38px 30px 24px; position: relative; }
-.detail .visual .poster { max-width: 300px; margin: 0 auto; box-shadow: var(--shadow-lift); cursor: zoom-in; }
-.detail .info { padding: 22px 20px calc(24px + var(--safe-b)); display: flex; flex-direction: column; gap: 18px; }
-.detail .close-float { position: absolute; top: 12px; right: 12px; z-index: 2; width: 42px; height: 42px; border-radius: 50%; border: 0; background: rgb(10 22 19 / .6); color: #fff; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
-.zoom-hint { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 5px; padding: 6px 11px; border-radius: 99px; background: rgb(10 22 19 / .72); color: #fff; font-size: 12px; font-weight: 700; }
+.detail .visual { background: #070605; padding: 34px 34px 26px; position: relative; }
+.detail .visual::before { content: ''; position: absolute; inset: 0; background: radial-gradient(closest-side, rgb(201 164 92 / .14), transparent 75%); pointer-events: none; }
+.detail .visual .poster { max-width: 290px; margin: 0 auto; box-shadow: var(--shadow-lift); cursor: zoom-in; border-radius: 6px; }
+.detail .visual .poster::after { box-shadow: inset 0 0 0 1px rgb(201 164 92 / .45); }
+.detail .info { padding: 22px 20px calc(26px + var(--safe-b)); display: flex; flex-direction: column; gap: 20px; }
+.detail .close-float { position: absolute; top: 12px; right: 12px; z-index: 3; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgb(255 255 255 / .12); background: rgb(14 10 6 / .65); color: #fff; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.zoom-hint { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 5px; padding: 6px 11px; border-radius: 99px; background: rgb(14 10 6 / .78); color: #fff; font-size: 12px; font-weight: 700; border: 1px solid rgb(255 255 255 / .1); }
+.detail h2 { font-family: var(--display); font-size: clamp(28px, 4vw, 36px); font-weight: 600; line-height: 1.08; margin-top: 6px; }
+.detail .orig { font-family: var(--display); font-style: italic; color: var(--ink-3); margin-top: 6px; font-size: 15.5px; }
+.detail .meta { margin-top: 10px; font-weight: 600; color: var(--ink-2); font-size: 14px; }
 @media (min-width: 820px) {
   .detail { grid-template-columns: 5fr 6fr; }
-  .detail .visual { padding: 40px; display: flex; align-items: center; }
+  .detail .visual { padding: 44px; display: flex; align-items: center; }
   .detail .visual .poster { max-width: none; width: 100%; }
-  .detail .info { padding: 34px 34px 30px; max-height: 88dvh; overflow-y: auto; }
-  .detail .close-float { background: var(--surface-2); color: var(--ink-2); }
+  .detail .info { padding: 38px 36px 32px; max-height: 88dvh; overflow-y: auto; }
 }
+.menu-prices { border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); padding: 6px 0; }
+.menu-prices ul { list-style: none; margin: 0; padding: 0; }
+.menu-prices li { display: flex; align-items: baseline; gap: 10px; padding: 9px 0; font-size: 15.5px; font-weight: 600; }
+.menu-prices li .dots { flex: 1; border-bottom: 1.5px dotted var(--ink-5); transform: translateY(-4px); }
+.menu-prices .price { font-family: var(--display); font-weight: 600; font-size: 21px; color: var(--gold-400); }
+.ref-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid rgb(232 119 46 / .45); background: rgb(232 119 46 / .07); }
+.ref-card .code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 24px; letter-spacing: .04em; color: var(--accent); }
+.ref-card p { font-size: 13px; color: var(--ink-3); }
 .formats-box { border: 1px solid var(--line); border-radius: 16px; background: var(--surface); padding: 14px 16px; }
 .formats-box li { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; }
 .formats-box li + li { border-top: 1px solid var(--line); }
@@ -294,14 +355,17 @@ input[type=number] { -moz-appearance: textfield; }
 .thumbs a { flex: 0 0 92px; text-decoration: none; color: var(--ink-2); font-size: 11.5px; font-weight: 700; }
 .thumbs a .poster { margin-bottom: 6px; box-shadow: var(--shadow-poster); }
 
+.logo { width: 52px; height: 52px; border-radius: 14px; background: var(--night); display: flex; align-items: center; justify-content: center; color: var(--gold-400); overflow: hidden; flex-shrink: 0; box-shadow: inset 0 0 0 1px rgb(201 164 92 / .35); }
+.logo img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+
 /* ═════════════════════ 5. Authentification ═════════════════════ */
-.auth { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 28px 16px; background: var(--brand-900); position: relative; overflow: hidden; }
-.auth::before { content: ''; position: absolute; left: -140px; top: 40px; width: 420px; height: 420px; border-radius: 50%; background: rgb(212 176 108 / .1); filter: blur(50px); }
-.auth-card { position: relative; width: 100%; max-width: 440px; background: var(--bg); border-radius: 30px; padding: 30px 24px; box-shadow: var(--shadow-lift); animation: rise .35s var(--ease) both; }
+.auth { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; padding: 28px 16px; background: var(--night); color: #f3ead9; position: relative; overflow: hidden; }
+.auth > .wordmark { position: relative; }
+.auth::before { content: ''; position: absolute; left: 50%; top: -180px; width: 620px; height: 420px; transform: translateX(-50%); background: radial-gradient(closest-side, rgb(201 164 92 / .16), transparent); pointer-events: none; }
+.auth-card { position: relative; width: 100%; max-width: 440px; background: var(--bg); color: var(--ink); border-radius: 26px; border-top: 3px solid var(--gold-500); padding: 30px 24px; box-shadow: var(--shadow-lift); animation: rise .35s var(--ease) both; }
 @media (min-width: 480px) { .auth-card { padding: 38px 36px; } }
 .auth-head { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 26px; }
-.auth-head .logo { width: 64px; height: 64px; border-radius: 20px; }
-.auth-head h1 { font-family: var(--display); font-size: 29px; font-weight: 600; margin-top: 16px; }
+.auth-head h1 { font-family: var(--display); font-size: 27px; font-weight: 600; }
 .auth-head p { margin-top: 4px; color: var(--ink-3); font-weight: 600; font-size: 14px; }
 
 /* ═════════════════════ 6. Administration ═════════════════════ */
@@ -309,35 +373,41 @@ input[type=number] { -moz-appearance: textfield; }
 .side { display: none; }
 @media (min-width: 1024px) {
   .admin { padding-left: 280px; }
-  .side { display: flex; flex-direction: column; position: fixed; inset: 0 auto 0 0; width: 280px; background: var(--brand-900); color: #f4efe3; z-index: 30; }
+  .side { display: flex; flex-direction: column; position: fixed; inset: 0 auto 0 0; width: 280px; background: var(--night); color: #f3ead9; z-index: 30; border-right: 1px solid #2a2318; }
 }
-.side .brandline { padding: 26px 22px 22px; }
+.side .brand { padding: 28px 24px 22px; }
+.side .brand .role { display: block; margin-top: 10px; font-size: 10.5px; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: #8b7f68; }
 .side nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; margin-top: 18px; flex: 1; overflow-y: auto; }
 .side nav a, .side .foot a, .side .foot button { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 12px; text-decoration: none; color: rgb(244 239 227 / .72); font-weight: 700; font-size: 15px; border: 0; background: none; text-align: left; width: 100%; }
 .side nav a:hover, .side .foot a:hover, .side .foot button:hover { background: rgb(255 255 255 / .06); color: #fff; }
-.side nav a[aria-current="page"] { background: rgb(255 255 255 / .1); color: #fff; }
+.side nav a[aria-current="page"] { background: rgb(201 164 92 / .12); color: var(--gold-300); box-shadow: inset 3px 0 0 var(--gold-500); }
 .side .foot { border-top: 1px solid rgb(255 255 255 / .1); padding: 12px; display: flex; flex-direction: column; gap: 2px; }
 .side .me { padding: 8px 14px 4px; font-size: 12.5px; color: rgb(244 239 227 / .55); }
 .side .add { margin: 0 16px; }
+.btn-accent { background: var(--accent); color: var(--accent-ink); }
+.btn-accent:hover:not(:disabled) { background: #f08a45; }
 .main { max-width: 1060px; margin: 0 auto; padding: 18px 16px calc(120px + var(--safe-b)); }
 @media (min-width: 640px) { .main { padding-left: 24px; padding-right: 24px; } }
 @media (min-width: 1024px) { .main { padding: 34px 40px 60px; } }
 .page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 22px; }
-.page-head h1 { font-family: var(--display); font-size: clamp(27px, 4vw, 33px); font-weight: 600; letter-spacing: -.015em; }
+.page-head h1 { font-family: var(--display); font-size: clamp(28px, 4vw, 34px); font-weight: 600; letter-spacing: -.01em; }
+.page-head h1::after { content: ''; display: block; width: 34px; height: 2px; margin-top: 10px; background: var(--accent); border-radius: 2px; }
 .page-head p { color: var(--ink-3); margin-top: 4px; }
 .back { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 6px -8px; padding: 4px 8px; border-radius: 8px; font-size: 13.5px; font-weight: 700; color: var(--ink-3); text-decoration: none; }
 .back:hover { background: rgb(0 0 0 / .05); }
-.mobile-top { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--line); background: rgb(251 248 242 / .92); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 25; }
-.mobile-top .brandline b { font-size: 16px; color: var(--ink); }
-.mobile-top .logo { width: 36px; height: 36px; border-radius: 11px; }
+.mobile-top { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 10px 16px; background: var(--night); color: #f3ead9; position: sticky; top: 0; z-index: 25; box-shadow: inset 0 -1px 0 rgb(201 164 92 / .35); }
+.mobile-top .icon-btn { color: var(--gold-300); }
+.mobile-top .icon-btn:hover { background: rgb(255 255 255 / .08); }
+.mobile-top .role { font-size: 9.5px; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: #8b7f68; margin-left: 12px; padding-left: 12px; border-left: 1px solid #3e3322; align-self: center; }
 @media (min-width: 1024px) { .mobile-top { display: none; } }
 .bottom-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: rgb(255 255 255 / .96); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding-bottom: var(--safe-b); }
 .bottom-nav .in { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; padding: 6px 6px 0; }
 .bottom-nav a, .bottom-nav button { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 0 7px; text-decoration: none; color: var(--ink-3); font-size: 11px; font-weight: 700; border: 0; background: none; }
-.bottom-nav a[aria-current="page"] { color: var(--brand); }
+.bottom-nav a[aria-current="page"] { color: var(--ink); }
+.bottom-nav a[aria-current="page"]:not(.fab) .icon { color: var(--accent-600); }
 .bottom-nav .icon { width: 24px; height: 24px; }
 .bottom-nav .fab { margin-top: -24px; }
-.bottom-nav .fab span { width: 58px; height: 58px; border-radius: 19px; background: var(--brand); color: var(--gold-300); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lift); border: 4px solid var(--bg); }
+.bottom-nav .fab span { width: 58px; height: 58px; border-radius: 19px; background: var(--accent); color: var(--accent-ink); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lift); border: 4px solid var(--bg); }
 .bottom-nav .fab .icon { width: 28px; height: 28px; }
 @media (min-width: 1024px) { .bottom-nav { display: none; } }
 
@@ -346,11 +416,12 @@ input[type=number] { -moz-appearance: textfield; }
 .stat { display: block; padding: 16px; text-decoration: none; transition: transform .15s, border-color .15s; }
 .stat:hover { transform: translateY(-2px); border-color: var(--line-2); }
 .stat .icon { color: var(--gold-600); }
+
 .stat.alert-on .icon { color: var(--danger); }
 .stat b { display: block; font-family: var(--display); font-size: 34px; font-weight: 600; line-height: 1; margin-top: 12px; font-variant-numeric: tabular-nums; }
 .stat span { display: block; margin-top: 6px; font-size: 13px; font-weight: 700; color: var(--ink-3); }
-.big-add { display: flex; align-items: center; justify-content: center; gap: 12px; height: 64px; margin-top: 16px; border-radius: 18px; background: var(--brand); color: #fff; font-family: var(--display); font-size: 21px; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-poster); }
-.big-add .icon { color: var(--gold-300); width: 26px; height: 26px; }
+.big-add { display: flex; align-items: center; justify-content: center; gap: 12px; height: 64px; margin-top: 16px; border-radius: 18px; background: var(--night); color: #f3ead9; box-shadow: inset 0 0 0 1px rgb(201 164 92 / .4), var(--shadow-poster); font-family: var(--display); font-size: 21px; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-poster); }
+.big-add .icon { color: var(--accent); width: 26px; height: 26px; }
 @media (min-width: 1024px) { .big-add { display: none; } }
 .section { margin-top: 34px; }
 .section > .section-title h2 { font-size: 21px; }
@@ -412,21 +483,21 @@ input[type=number] { -moz-appearance: textfield; }
 .gtile > button.pick { display: block; width: 100%; padding: 0; border: 0; background: none; border-radius: 12px; transition: transform .2s var(--ease); }
 .gtile > button.pick:hover { transform: translateY(-3px); }
 .gtile .poster { box-shadow: var(--shadow-poster); }
-.gtile .lang { position: absolute; left: 6px; top: 6px; padding: 2px 7px; border-radius: 6px; background: rgb(10 22 19 / .78); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; pointer-events: none; }
-.gtile .zoom { position: absolute; right: 6px; top: 6px; width: 34px; height: 34px; border-radius: 9px; border: 0; background: rgb(10 22 19 / .72); color: #fff; display: flex; align-items: center; justify-content: center; }
-.gtile .owned { position: absolute; left: 6px; right: 6px; bottom: 6px; padding: 4px; border-radius: 7px; background: var(--gold-400); color: var(--brand-900); font-size: 11px; font-weight: 800; text-align: center; pointer-events: none; }
+.gtile .lang { position: absolute; left: 6px; top: 6px; padding: 2px 7px; border-radius: 6px; background: rgb(14 10 6 / .78); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; pointer-events: none; }
+.gtile .zoom { position: absolute; right: 6px; top: 6px; width: 34px; height: 34px; border-radius: 9px; border: 0; background: rgb(14 10 6 / .72); color: #fff; display: flex; align-items: center; justify-content: center; }
+.gtile .owned { position: absolute; left: 6px; right: 6px; bottom: 6px; padding: 4px; border-radius: 7px; background: var(--gold-400); color: var(--night); font-size: 11px; font-weight: 800; text-align: center; pointer-events: none; }
 .result-tile { display: flex; flex-direction: column; gap: 8px; padding: 8px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); text-align: left; transition: transform .15s, border-color .15s; }
 .result-tile:hover { transform: translateY(-2px); border-color: var(--brand-200); }
 .result-tile b { display: block; line-height: 1.25; }
 .film-banner { display: flex; align-items: center; gap: 12px; padding: 10px; margin-bottom: 18px; }
 .film-banner .poster { width: 46px; border-radius: 7px; flex-shrink: 0; }
 .photo-choice { display: flex; align-items: center; gap: 16px; width: 100%; min-height: 84px; padding: 14px 18px; border-radius: 18px; text-align: left; border: 1px solid var(--line-2); background: var(--surface); }
-.photo-choice.primary { background: var(--brand); border-color: var(--brand); color: #fff; box-shadow: var(--shadow-poster); }
+.photo-choice.primary { background: var(--night); border-color: var(--night); color: #f3ead9; box-shadow: inset 0 0 0 1px rgb(201 164 92 / .4), var(--shadow-poster); }
 .photo-choice .icon { width: 30px; height: 30px; color: var(--brand-700); }
-.photo-choice.primary .icon { color: var(--gold-300); }
+.photo-choice.primary .icon { color: var(--accent); }
 .photo-choice b { display: block; font-family: var(--display); font-size: 18px; font-weight: 600; }
 .photo-choice span { font-size: 13.5px; opacity: .78; }
-.crop-stage { height: min(58dvh, 560px); min-height: 300px; border-radius: 16px; overflow: hidden; background: #0c1c18; }
+.crop-stage { height: min(58dvh, 560px); min-height: 300px; border-radius: 16px; overflow: hidden; background: #0e0b07; }
 .crop-stage img { max-width: 100%; display: block; }
 .sticky-save { position: fixed; left: 0; right: 0; bottom: calc(70px + var(--safe-b)); z-index: 20; padding: 10px 16px; background: rgb(251 248 242 / .95); backdrop-filter: blur(10px); border-top: 1px solid var(--line); }
 @media (min-width: 1024px) { .sticky-save { position: static; padding: 0; background: none; border: 0; backdrop-filter: none; } }
@@ -525,6 +596,12 @@ export function centsToInput(c) {
 const EURO = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
 export function formatPrice(c) {
   return c === null || c === undefined ? '' : EURO.format(c / 100)
+}
+const EURO_ROUND = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+/** Prix pour la vitrine : « 15 € » plutôt que « 15,00 € » quand il n'y a pas de centimes. */
+export function formatPriceShort(c) {
+  if (c === null || c === undefined) return ''
+  return c % 100 === 0 ? EURO_ROUND.format(c / 100) : EURO.format(c / 100)
 }
 export function plural(n, one, many = one + 's') {
   return `${Number(n).toLocaleString('fr-FR')} ${n > 1 ? many : one}`
@@ -1195,14 +1272,29 @@ const A = (p = '') => ADMIN_BASE + p
 const PUB = { catalog: null, settings: null, mounted: false, signature: '', detail: null, limit: 24, timer: null, closingByRoute: false }
 const PAGE_SIZE = 24
 
+const DEFAULT_ACCENT = '#e8772e'
 function applyBrand(settings) {
   const c = settings?.accent_color
-  if (c && /^#[0-9a-f]{6}$/i.test(c)) document.documentElement.style.setProperty('--brand', c)
-  else document.documentElement.style.removeProperty('--brand')
+  if (c && /^#[0-9a-f]{6}$/i.test(c)) document.documentElement.style.setProperty('--accent', c)
+  else document.documentElement.style.removeProperty('--accent')
 }
 function logoHtml(path) {
   const u = img.storage(path)
   return html`<span class="logo">${u ? html`<img src="${u}" alt="">` : icon('clapper')}</span>`
+}
+/** Noms affichés. L'ancien nom par défaut « Ciné Affiches » devient « Affiches ». */
+function brandNames(s = {}) {
+  const raw = (s.catalog_name || '').trim()
+  const catalog = !raw || raw === 'Ciné Affiches' ? 'Affiches' : raw
+  const cinema = (s.cinema_name || '').trim() || 'Le Lido'
+  return { catalog, cinema, full: `${catalog} ${cinema}` }
+}
+/** Nom en lettres « AFFICHES / LE LIDO », remplacé par le logo s'il a été envoyé dans les réglages. */
+function wordmarkHtml(s = {}, cls = '', href = null) {
+  const n = brandNames(s)
+  const u = img.storage(s.logo_path)
+  const inner = u ? html`<img src="${u}" alt="${n.full}">` : html`<small>${n.catalog}</small><b>${n.cinema}</b>`
+  return href ? html`<a class="wordmark ${cls}" href="${href}" aria-label="${n.full} — accueil">${inner}</a>` : html`<span class="wordmark ${cls}" role="img" aria-label="${n.full}">${inner}</span>`
 }
 
 async function loadPublic(force = false) {
@@ -1218,7 +1310,8 @@ async function loadPublic(force = false) {
 }
 
 async function renderPublic(route) {
-  document.title = `${PUB.settings?.catalog_name || 'Ciné Affiches'} — ${PUB.settings?.cinema_name || 'Le Lido'}`
+  document.body.classList.add('pub')
+  document.title = brandNames(PUB.settings || {}).full
   if (!PUB.mounted) {
     PUB.mounted = true
     mountPublicShell()
@@ -1239,35 +1332,34 @@ async function renderPublic(route) {
 function mountPublicShell() {
   const p = qs()
   setHTML($('#app'), html`
-  <header class="pub-hero"><div class="grain" style="position:absolute;inset:0;opacity:.7"></div>
-    <div class="container" style="position:relative;padding-top:20px;padding-bottom:34px">
-      <div class="brandline" id="pub-brand">${logoHtml(null)}<div><b>Ciné Affiches</b><span>Cinéma Le Lido</span></div></div>
-      <h1>Les affiches <em>du cinéma</em></h1>
-      <p class="tag" id="pub-tag">Découvrez les affiches de films disponibles au cinéma.</p>
+  <header class="pub-top"><div class="container">
+      <div id="pub-brand">${wordmarkHtml({}, '', '/')}</div>
+      <div class="ornament" aria-hidden="true"><i></i></div>
+      <p class="pub-tag" id="pub-tag">Découvrez les affiches de films disponibles au cinéma.</p>
       <div class="search">${icon('search')}
-        <input class="input" id="pub-q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Rechercher un film, un titre original, une année…" aria-label="Rechercher un film" value="${p.get('q') || ''}">
+        <input class="input" id="pub-q" type="search" enterkeyhint="search" autocomplete="off" placeholder="Un film, un titre original, une année…" aria-label="Rechercher un film" value="${p.get('q') || ''}">
         <button class="icon-btn clear ${p.get('q') ? '' : 'hidden'}" id="pub-clear" aria-label="Effacer la recherche">${icon('x')}</button>
       </div>
-    </div>
-  </header>
+  </div></header>
   <div class="pub-bar"><div class="container">
     <div class="chips no-scrollbar grow" id="pub-formats" role="radiogroup" aria-label="Filtrer par format"></div>
     <label class="sort-select">${icon('sort')}<span id="pub-sort-label">Trier</span>
       <select id="pub-sort" aria-label="Trier les affiches">${Object.entries(SORTS).map(([k, l]) => html`<option value="${k}" ${attr((p.get('tri') || 'title-asc') === k, 'selected')}>${l}</option>`)}</select>
     </label>
   </div></div>
-  <main class="container" style="padding-top:26px;padding-bottom:64px">
-    <section id="pub-recent" class="hidden" aria-labelledby="recent-h" style="margin-bottom:40px"></section>
+  <main class="container" style="padding-top:28px;padding-bottom:70px">
+    <section id="pub-recent" class="hidden" aria-labelledby="recent-h" style="margin-bottom:44px"></section>
     <section aria-labelledby="all-h">
-      <div class="section-title"><h2 id="all-h">Toutes les affiches</h2><span class="muted small" id="pub-count" aria-live="polite"></span></div>
+      <div class="section-title"><div><p class="pub-eyebrow" id="all-eyebrow">Catalogue</p><h2 id="all-h">Toutes les affiches</h2></div><span class="muted small" id="pub-count" aria-live="polite"></span></div>
       <div id="pub-results">${skeletonGrid()}</div>
       <div id="pub-more" style="height:40px"></div>
     </section>
   </main>
   <footer class="pub-foot"><div class="container">
-    <p style="font-weight:700;color:var(--ink-2)" id="pub-foot-name">Ciné Affiches · Cinéma Le Lido</p>
+    <div class="ornament" aria-hidden="true"><i></i></div>
+    <div id="pub-foot-brand">${wordmarkHtml({}, 'md')}</div>
     <p id="pub-foot-note">Catalogue mis à jour selon les stocks du cinéma.</p>
-    <p class="xs" style="margin-top:10px;color:var(--ink-4)">Informations et visuels de films : TMDB. Ce site utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.</p>
+    <p class="xs" style="color:var(--ink-4);max-width:520px">Informations et visuels de films : TMDB. Ce site utilise l’API TMDB mais n’est ni approuvé ni certifié par TMDB.</p>
   </div></footer>`)
 
   const input = $('#pub-q')
@@ -1303,28 +1395,30 @@ function skeletonGrid(n = 10) {
 
 function fillPublicHeader() {
   const s = PUB.settings
-  setHTML($('#pub-brand'), html`${logoHtml(s.logo_path)}<div><b>${s.catalog_name}</b><span>Cinéma ${s.cinema_name}</span></div>`)
+  setHTML($('#pub-brand'), wordmarkHtml(s, '', '/'))
+  setHTML($('#pub-foot-brand'), wordmarkHtml(s, 'md'))
   $('#pub-tag').textContent = s.tagline || ''
-  $('#pub-foot-name').textContent = `${s.catalog_name} · Cinéma ${s.cinema_name}`
+  $('#pub-tag').classList.toggle('hidden', !s.tagline)
   $('#pub-foot-note').textContent = s.contact_note || 'Catalogue mis à jour selon les stocks du cinéma.'
-  document.title = `${s.catalog_name} — ${s.cinema_name}`
+  if (!PUB.detail) document.title = brandNames(s).full
 }
 
 function publicLink(v) {
   const s = qs().toString()
   return `/affiche/${encodeURIComponent(v.visual_id)}${s ? `?${s}` : ''}`
 }
-function formatPills(formats) {
-  return html`<div class="fpills">${formats.map((f) => html`<span class="fpill">${f.label.replace(/\s*format$/i, '')}${f.price_cents !== null && f.price_cents !== undefined ? html`<i>· ${formatPrice(f.price_cents)}</i>` : ''}</span>`)}</div>`
+const shortFormat = (label) => label.replace(/\s*format$/i, '')
+function formatPrices(formats) {
+  return html`<p class="prices">${formats.map((f, i) => html`${i ? html`<span> · </span>` : ''}${shortFormat(f.label)}${f.price_cents !== null && f.price_cents !== undefined ? ` ${formatPriceShort(f.price_cents)}` : ''}`)}</p>`
 }
-function posterCard(v, i = 99) {
+function posterCard(v, i = 99, { ribbon } = {}) {
   const y = yearOf(v)
   return html`<a class="pcard" href="${publicLink(v)}" aria-label="${v.title}${y ? ` (${y})` : ''}${v.label ? ` — ${v.label}` : ''}">
-    ${posterHtml(img.visual(v, 'card'), `Affiche : ${v.title}`, { eager: i < 4 })}
+    <div style="position:relative">${ribbon ? html`<span class="ribbon">${ribbon}</span>` : ''}${posterHtml(img.visual(v, 'card'), `Affiche : ${v.title}`, { eager: i < 4 })}</div>
     <div class="stack tight" style="gap:7px;padding:0 2px">
       <h3 class="clamp2">${v.title}</h3>
-      <p class="meta">${y || 'Année inconnue'}${v.label ? html`<span style="color:var(--ink-4)"> · ${v.label}</span>` : ''}</p>
-      ${formatPills(v.formats)}
+      <p class="meta">${y || 'Année inconnue'}${v.label ? html` · ${v.label}` : ''}</p>
+      ${formatPrices(v.formats)}
     </div></a>`
 }
 
@@ -1336,7 +1430,7 @@ function renderPublicResults(appendOnly = false) {
   const sort = SORTS[p.get('tri')] ? p.get('tri') : 'title-asc'
   const formats = catalogFormats(PUB.catalog)
   setHTML($('#pub-formats'), [{ code: 'all', label: 'Toutes' }, ...formats].map((f) =>
-    html`<button class="chip" role="radio" aria-checked="${String(format === f.code)}" data-format="${f.code}">${f.label}</button>`))
+    html`<button class="chip" role="radio" aria-checked="${String(format === f.code)}" data-format="${f.code}">${f.code === 'all' ? f.label : shortFormat(f.label)}</button>`))
   $('#pub-sort-label').textContent = sort === 'title-asc' ? 'Trier' : SORTS[sort]
 
   const searching = query.trim() !== '' || format !== 'all'
@@ -1344,13 +1438,14 @@ function renderPublicResults(appendOnly = false) {
   const recent = PUB.settings.show_recent && PUB.settings.recent_count > 0 ? recentlyAdded(PUB.catalog, PUB.settings.recent_count) : []
   if (!searching && recent.length && !appendOnly) {
     recentBox.classList.remove('hidden')
-    setHTML(recentBox, html`<div class="section-title"><h2 id="recent-h">${icon('sparkles')} Dernières affiches ajoutées</h2></div>
-      <div class="carousel no-scrollbar">${recent.map((v, i) => html`<div>${posterCard(v, i)}</div>`)}</div>`)
+    setHTML(recentBox, html`<div class="section-title"><div><p class="pub-eyebrow">Nouveautés</p><h2 id="recent-h">Dernières arrivées</h2></div></div>
+      <div class="carousel no-scrollbar">${recent.map((v, i) => html`<div>${posterCard(v, i, { ribbon: 'Nouveau' })}</div>`)}</div>`)
   } else if (searching) recentBox.classList.add('hidden')
 
   const results = filterCatalog(PUB.catalog, { query, format, sort })
   PUB.lastCount = results.length
   $('#all-h').textContent = searching ? 'Résultats' : 'Toutes les affiches'
+  $('#all-eyebrow').textContent = searching ? 'Recherche' : 'Catalogue'
   $('#pub-count').textContent = plural(results.length, 'affiche')
   const box = $('#pub-results')
   if (!results.length) {
@@ -1381,37 +1476,35 @@ function syncPublicDetail(visualId) {
   const others = otherVisualsOfFilm(PUB.catalog, v)
   const y = yearOf(v)
   const meta = [y, formatRuntime(v.runtime), (v.genres || []).slice(0, 3).join(', ')].filter(Boolean).join(' · ')
-  document.title = `${v.title} — ${s.catalog_name}`
+  document.title = `${v.title} — ${brandNames(s).full}`
   PUB.detail = openModal({
     size: 'xl', bare: true, label: `Affiche : ${v.title}`,
     body: html`<div class="detail">
       <button class="close-float" data-close aria-label="Fermer la fiche">${icon('x')}</button>
-      <div class="visual grain"><div style="position:relative;width:100%">
+      <div class="visual"><div style="position:relative;width:100%">
         <button style="all:unset;display:block;cursor:zoom-in;width:100%" data-act="zoom" aria-label="Agrandir l'affiche">${posterHtml(img.visual(v, 'large'), `Affiche : ${v.title}`, { eager: true })}</button>
         <span class="zoom-hint">${icon('maximize')} Agrandir</span></div></div>
       <div class="info">
         <div style="padding-right:44px">
-          ${v.label ? html`<p class="eyebrow" style="color:var(--gold-600)">${v.label}</p>` : ''}
-          <h2 class="display" style="font-size:clamp(27px,4vw,34px);font-weight:600;margin-top:4px">${v.title}</h2>
-          ${v.original_title && v.original_title !== v.title ? html`<p class="muted small" style="font-style:italic;margin-top:4px">${v.original_title}</p>` : ''}
-          ${meta ? html`<p style="margin-top:8px;font-weight:600;color:var(--ink-2)">${meta}</p>` : ''}
-          ${v.director ? html`<p class="muted small">Réalisation : ${v.director}</p>` : ''}
-          ${v.release_date ? html`<p class="muted small">Sortie : ${fmtDate(v.release_date)}</p>` : ''}
+          <p class="pub-eyebrow">${v.label || 'Affiche de cinéma'}</p>
+          <h2>${v.title}</h2>
+          ${v.original_title && v.original_title !== v.title ? html`<p class="orig">${v.original_title}</p>` : ''}
+          ${meta ? html`<p class="meta">${meta}</p>` : ''}
+          ${v.director ? html`<p class="muted small" style="margin-top:2px">Réalisation : ${v.director}</p>` : ''}
         </div>
-        <section class="formats-box" aria-label="Formats disponibles">
-          <p class="eyebrow" style="margin-bottom:4px">Formats disponibles</p>
-          <ul>${v.formats.map((f) => html`<li><span class="row" style="font-weight:700">${icon('checkCircle')} ${f.label}</span>
-            ${f.price_cents !== null && f.price_cents !== undefined ? html`<span class="price">${formatPrice(f.price_cents)}</span>` : html`<span class="muted small">Disponible</span>`}</li>`)}</ul>
-          ${s.contact_note ? html`<p class="muted small" style="border-top:1px solid var(--line);padding-top:10px;margin-top:4px">${s.contact_note}</p>` : ''}
+        <section class="menu-prices" aria-label="Formats disponibles">
+          <ul>${v.formats.map((f) => html`<li><span>${f.label}</span><span class="dots" aria-hidden="true"></span>
+            ${f.price_cents !== null && f.price_cents !== undefined ? html`<span class="price">${formatPriceShort(f.price_cents)}</span>` : html`<span class="muted small">Disponible</span>`}</li>`)}</ul>
         </section>
-        ${v.overview ? html`<p style="color:var(--ink-2);line-height:1.65">${v.overview}</p>` : ''}
-        ${others.length ? html`<section><p class="eyebrow" style="margin-bottom:10px">Autres affiches de ce film (${others.length})</p>
+        <div class="ref-card"><div><p>Référence à indiquer à la caisse</p>${s.contact_note ? html`<p style="margin-top:2px;color:var(--ink-2)">${s.contact_note}</p>` : ''}</div><span class="code">${v.reference_code}</span></div>
+        ${v.overview ? html`<p style="color:var(--ink-2);line-height:1.7;font-size:14.5px">${v.overview}</p>` : ''}
+        ${others.length ? html`<section><p class="pub-eyebrow" style="margin-bottom:10px">Autres affiches de ce film · ${others.length}</p>
           <div class="thumbs no-scrollbar">${others.map((o) => html`<a href="${publicLink(o)}" data-replace aria-label="Voir l'affiche ${o.label || o.reference_code}">
             ${posterHtml(img.visual(o, 'thumb'), o.label || o.title)}<span class="clamp2">${o.label || o.reference_code}</span></a>`)}</div></section>` : ''}
       </div></div>`,
     onClose: () => {
       PUB.detail = null
-      document.title = `${s.catalog_name} — ${s.cinema_name}`
+      document.title = brandNames(s).full
       if (!PUB.closingByRoute) { const q = qs().toString(); navigate(`/${q ? `?${q}` : ''}`) }
     },
   })
@@ -1491,7 +1584,8 @@ async function signOut(silent = false) {
 }
 
 async function renderAdmin(route) {
-  document.title = 'Administration — Ciné Affiches'
+  document.body.classList.remove('pub')
+  document.title = `Administration — ${brandNames(ADM.settings || {}).full}`
   if (PUB.mounted) { PUB.mounted = false; clearInterval(PUB.timer); PUB.detail?.close() }
 
   if (PUBLIC_ADMIN_PAGES.has(route.name)) { ADM.shell = false; return AUTH_PAGES[route.name](route) }
@@ -1545,8 +1639,8 @@ function mountAdminShell() {
   const nav = NAV.filter((n) => !n[5] || isOwner())
   setHTML($('#app'), html`<div class="admin">
     <aside class="side"><div class="grain" style="position:absolute;inset:0;opacity:.6;pointer-events:none"></div>
-      <div class="brandline" style="position:relative">${logoHtml(s.logo_path)}<div><b>${s.catalog_name}</b><span>Administration</span></div></div>
-      <a class="btn btn-gold lg add" href="${A('/ajouter')}" style="position:relative">${icon('plus')} Ajouter une affiche</a>
+      <div class="brand" style="position:relative">${wordmarkHtml(s, 'sm', A())}<span class="role">Espace interne</span></div>
+      <a class="btn btn-accent lg add" href="${A('/ajouter')}" style="position:relative">${icon('plus')} Ajouter une affiche</a>
       <nav aria-label="Navigation administration" style="position:relative">${nav.map(([k, p, ic, label]) => html`<a href="${A(p)}" data-nav="${k}">${icon(ic)} ${label}</a>`)}</nav>
       <div class="foot" style="position:relative">
         <p class="me truncate">${ADM.profile.display_name || ADM.profile.email}<br>${ROLE_LABELS[ADM.profile.role]}</p>
@@ -1554,7 +1648,7 @@ function mountAdminShell() {
         <button data-act="logout">${icon('logout')} Se déconnecter</button>
       </div>
     </aside>
-    <div class="mobile-top"><div class="brandline">${logoHtml(s.logo_path)}<div><b>${s.catalog_name}</b><span style="color:var(--gold-600)">Administration</span></div></div>
+    <div class="mobile-top"><div class="row" style="gap:0">${wordmarkHtml(s, 'sm', A())}<span class="role">Espace<br>interne</span></div>
       <a class="icon-btn" href="${A('/reglages')}" aria-label="Réglages">${icon('settings')}</a></div>
     <main class="main" id="adm-main"></main>
     <nav class="bottom-nav" aria-label="Navigation administration"><div class="in">
@@ -1591,8 +1685,13 @@ function pageHead(title, subtitle = '', { back, actions } = {}) {
    G. PAGES D'AUTHENTIFICATION
    ═══════════════════════════════════════════════════════════════════════ */
 function authShell(title, subtitle, body) {
-  setHTML($('#app'), html`<main class="auth"><div class="auth-card">
-    <div class="auth-head">${logoHtml(null)}<h1>${title}</h1>${subtitle ? html`<p>${subtitle}</p>` : ''}</div>${body}</div></main>`)
+  document.body.classList.remove('pub')
+  setHTML($('#app'), html`<main class="auth">${wordmarkHtml(ADM.settings || PUB.settings || {}, 'md')}<div class="auth-card">
+    <div class="auth-head"><h1>${title}</h1>${subtitle ? html`<p>${subtitle}</p>` : ''}</div>${body}</div></main>`)
+  if (!ADM.settings && !PUB.settings) {
+    // Logo éventuel du cinéma (paramètres publics), sans bloquer l'affichage
+    api.publicSettings().then((st) => { if (st) { PUB.settings = PUB.settings || st; const w = $('.auth > .wordmark'); if (w && st.logo_path) w.outerHTML = toHtml(wordmarkHtml(st, 'md')) } }).catch(() => {})
+  }
   return $('.auth-card')
 }
 function formAlert(card, tone, message) {
@@ -1602,7 +1701,7 @@ function formAlert(card, tone, message) {
   setHTML(box, html`<div class="alert ${tone}" role="${tone === 'error' ? 'alert' : 'status'}">${message}</div>`)
 }
 function renderAuthMessage(title, message, withSignOut, withRetry) {
-  const card = authShell(title, 'Administration — Le Lido', html`<div class="stack">
+  const card = authShell(title, 'Espace interne', html`<div class="stack">
     <div class="alert info">${message}</div>
     ${withRetry ? html`<button class="btn btn-primary block" data-retry>Réessayer</button>` : ''}
     ${withSignOut ? html`<button class="btn btn-secondary block" data-out>Se déconnecter</button>` : ''}
@@ -1622,7 +1721,7 @@ function loginErrorMessage(e) {
 }
 
 async function renderLogin(message) {
-  const card = authShell('Ciné Affiches', 'Administration — Le Lido', html`
+  const card = authShell('Connexion', 'Espace interne', html`
     <form class="stack" novalidate>
       <div data-alert>${message ? html`<div class="alert success" role="status">${message}</div>` : ''}</div>
       <div class="field"><label for="l-email">Adresse e-mail</label><input class="input" id="l-email" name="email" type="email" inputmode="email" autocomplete="username" required autofocus></div>
@@ -1653,7 +1752,7 @@ async function renderLogin(message) {
 
 const AUTH_PAGES = {
   async forgot() {
-    const card = authShell('Mot de passe oublié', 'Administration — Le Lido', html`
+    const card = authShell('Mot de passe oublié', 'Espace interne', html`
       <form class="stack" novalidate><p class="muted small">Indiquez l’adresse e-mail de votre compte : vous recevrez un lien pour choisir un nouveau mot de passe.</p>
         <div data-alert></div>
         <div class="field"><label for="f-email">Adresse e-mail</label><input class="input" id="f-email" name="email" type="email" inputmode="email" autocomplete="username" required autofocus></div>
@@ -1772,7 +1871,7 @@ const AUTH_PAGES = {
   },
 }
 function linkExpired(title, href, label, message = 'Ce lien a expiré ou a déjà été utilisé.') {
-  authShell(title, 'Administration — Le Lido', html`<div class="stack"><div class="alert error">${message}</div>
+  authShell(title, 'Espace interne', html`<div class="stack"><div class="alert error">${message}</div>
     <a class="btn btn-primary block" href="${href}">${label}</a></div>`)
 }
 function pwError(error) {
@@ -2129,7 +2228,7 @@ function movementList(moves, { showVisual = true } = {}) {
    J. TABLEAU DE BORD
    ═══════════════════════════════════════════════════════════════════════ */
 ADMIN_PAGES.dashboard = async (page) => {
-  setHTML(page, html`${pageHead('Tableau de bord', fmtDay(new Date()) + ' · ' + ADM.settings.catalog_name)}
+  setHTML(page, html`${pageHead('Tableau de bord', fmtDay(new Date()) + ' · ' + brandNames(ADM.settings).full)}
     <div class="stats" data-stats></div>
     <a class="big-add" href="${A('/ajouter')}">${icon('plus')} Ajouter une affiche</a>
     <section class="section"><div class="section-title"><h2>Recherche rapide</h2></div>
@@ -2931,7 +3030,7 @@ function inventoryDoc({ rows, opts, thumbs, scopeLabel }) {
   const s = ADM.settings
   const date = fmtDateTime(new Date())
   const copies = rows.reduce((a, r) => a + r.quantity, 0)
-  const INK = '#211d18', MUTED = '#6b6458', LINE = '#cfc6b6', DARK = '#142c26'
+  const INK = '#211d18', MUTED = '#6b6458', LINE = '#cfc6b6', DARK = '#17120c'
   // pdfmake modifie les objets qu'il met en page : chaque case / ligne doit être un objet neuf.
   const box = () => ({ canvas: [{ type: 'rect', x: 0, y: 1, w: 8.5, h: 8.5, lineWidth: 0.9, lineColor: INK }], width: 13 })
   const writeLine = () => ({ canvas: [{ type: 'line', x1: 0, y1: 11, x2: 116, y2: 11, lineWidth: 0.5, lineColor: '#9b9386' }] })
@@ -2970,15 +3069,15 @@ function inventoryDoc({ rows, opts, thumbs, scopeLabel }) {
   }
   return {
     pageSize: 'A4', pageMargins: [28, 74, 28, 42],
-    info: { title: `Inventaire des affiches — ${s.cinema_name}`, author: s.catalog_name },
+    info: { title: `Inventaire des affiches — ${brandNames(s).full}`, author: brandNames(s).full },
     header: () => ({ margin: [28, 22, 28, 0], stack: [
       { columns: [
-        { stack: [{ text: 'Inventaire des affiches', fontSize: 15, bold: true, color: DARK }, { text: `${s.catalog_name} · Cinéma ${s.cinema_name} · ${scopeLabel}`, fontSize: 8.5, color: MUTED, margin: [0, 2, 0, 0] }] },
+        { stack: [{ text: 'Inventaire des affiches', fontSize: 15, bold: true, color: DARK }, { text: `${brandNames(s).full} · ${scopeLabel}`, fontSize: 8.5, color: MUTED, margin: [0, 2, 0, 0] }] },
         { stack: [{ text: `Généré le ${date}`, fontSize: 8, color: MUTED }, { text: `${plural(rows.length, 'ligne')} · ${plural(copies, 'exemplaire')}`, fontSize: 8, color: MUTED }], alignment: 'right', width: 'auto' },
       ] },
       { canvas: [{ type: 'line', x1: 0, y1: 6, x2: 539, y2: 6, lineWidth: 1.6, lineColor: DARK }] },
     ] }),
-    footer: (p, n) => ({ margin: [28, 14, 28, 0], columns: [{ text: `${s.catalog_name} — ${s.cinema_name}`, fontSize: 7.5, color: MUTED }, { text: `Page ${p} / ${n}`, alignment: 'right', fontSize: 7.5, color: MUTED }] }),
+    footer: (p, n) => ({ margin: [28, 14, 28, 0], columns: [{ text: brandNames(s).full, fontSize: 7.5, color: MUTED }, { text: `Page ${p} / ${n}`, alignment: 'right', fontSize: 7.5, color: MUTED }] }),
     content: rows.length ? [{
       table: { headerRows: 1, dontBreakRows: true, widths, body },
       layout: {
@@ -3081,13 +3180,14 @@ ADMIN_PAGES.settings = async (page) => {
         <input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" data-logo-file>
         <button class="btn btn-secondary sm" data-logo ${attr(!owner, 'disabled')}>${icon('imagePlus')} ${s.logo_path ? 'Changer le logo' : 'Ajouter le logo du cinéma'}</button>
         ${s.logo_path ? html`<button class="btn btn-ghost sm" data-logo-rm ${attr(!owner, 'disabled')}>${icon('trash')} Retirer</button>` : ''}</div>
+      <p class="hint" style="margin-top:-4px">Le logo remplace le nom « ${brandNames(s).full} » en haut de la vitrine, sur fond noir : choisissez de préférence un logo clair (or, blanc) en PNG à fond transparent.</p>
       <form class="stack" data-catalog>
-        <div class="grid2"><div class="field"><label for="st-cat">Nom du catalogue</label><input class="input" id="st-cat" name="catalog_name" value="${s.catalog_name}" ${attr(!owner, 'disabled')}></div>
+        <div class="grid2"><div class="field"><label for="st-cat">Nom du catalogue</label><input class="input" id="st-cat" name="catalog_name" value="${brandNames(s).catalog}" ${attr(!owner, 'disabled')}></div>
           <div class="field"><label for="st-cin">Nom du cinéma</label><input class="input" id="st-cin" name="cinema_name" value="${s.cinema_name}" ${attr(!owner, 'disabled')}></div></div>
         <div class="field"><label for="st-tag">Phrase d’accueil</label><textarea class="textarea" id="st-tag" name="tagline" ${attr(!owner, 'disabled')}>${s.tagline}</textarea></div>
         <div class="field"><label for="st-note">Message pratique</label><input class="input" id="st-note" name="contact_note" value="${s.contact_note}" ${attr(!owner, 'disabled')}><span class="hint">Affiché sur chaque fiche (ex. « En vente à la caisse du cinéma »).</span></div>
-        <div class="grid2"><div class="field"><label for="st-color">Couleur principale</label><div class="row"><input type="color" id="st-color" name="accent_color" value="${s.accent_color || '#1b3a32'}" style="width:54px;height:44px;border:1px solid var(--line-2);border-radius:10px;padding:2px;background:#fff" ${attr(!owner, 'disabled')}>
-            <button type="button" class="btn btn-ghost sm" data-color-reset ${attr(!owner, 'disabled')}>Vert forêt d’origine</button></div></div>
+        <div class="grid2"><div class="field"><label for="st-color">Couleur d’accent</label><div class="row"><input type="color" id="st-color" name="accent_color" value="${s.accent_color || DEFAULT_ACCENT}" style="width:54px;height:44px;border:1px solid var(--line-2);border-radius:10px;padding:2px;background:#fff" ${attr(!owner, 'disabled')}>
+            <button type="button" class="btn btn-ghost sm" data-color-reset ${attr(!owner, 'disabled')}>Orange d’origine</button></div></div>
           <div class="field"><label for="st-recent">Affiches « dernières ajoutées »</label><input class="input" id="st-recent" name="recent_count" type="number" min="0" max="24" value="${s.recent_count}" ${attr(!owner, 'disabled')}></div></div>
         ${owner ? html`<button class="btn btn-primary" style="align-self:flex-start" type="submit">Enregistrer</button>` : ''}</form>`)}
     ${section('Vitrine', 'Ce que voient les clients.', html`<div class="card pad stack">
@@ -3130,10 +3230,10 @@ ADMIN_PAGES.settings = async (page) => {
     if (!f.catalog_name.value.trim() || !f.cinema_name.value.trim()) return toast('Le nom du catalogue et celui du cinéma sont obligatoires.', 'error')
     busy($('[type=submit]', f), () => saveSettings({
       catalog_name: f.catalog_name.value.trim(), cinema_name: f.cinema_name.value.trim(), tagline: f.tagline.value.trim(), contact_note: f.contact_note.value.trim(),
-      accent_color: f.accent_color.value.toLowerCase() === '#1b3a32' ? null : f.accent_color.value, recent_count: Math.min(24, Math.max(0, Math.round(Number(f.recent_count.value)) || 0)),
+      accent_color: f.accent_color.value.toLowerCase() === DEFAULT_ACCENT ? null : f.accent_color.value, recent_count: Math.min(24, Math.max(0, Math.round(Number(f.recent_count.value)) || 0)),
     }).then((r) => { if (r) { ADM.shell = false; render() } }))
   }
-  $('[data-color-reset]', page).onclick = () => { cat.accent_color.value = '#1b3a32' }
+  $('[data-color-reset]', page).onclick = () => { cat.accent_color.value = DEFAULT_ACCENT }
   // Logo
   $('[data-logo]', page).onclick = () => $('[data-logo-file]', page).click()
   $('[data-logo-file]', page).onchange = async (e) => {
@@ -3208,9 +3308,11 @@ ADMIN_PAGES.settings = async (page) => {
       pdfMake.createPdf({
         pageSize: 'A4', pageMargins: [50, 70, 50, 50], info: { title: 'Affichette QR code' },
         content: [
-          { text: st.cinema_name.toUpperCase(), alignment: 'center', fontSize: 13, bold: true, characterSpacing: 4, color: '#9d7737' },
-          { text: 'Les affiches de cinéma', alignment: 'center', fontSize: 34, bold: true, color: '#142c26', margin: [0, 16, 0, 6] },
-          { text: 'sont en vente au cinéma !', alignment: 'center', fontSize: 20, color: '#142c26' },
+          { text: brandNames(st).catalog.toUpperCase(), alignment: 'center', fontSize: 12, bold: true, characterSpacing: 7, color: '#a5823f' },
+          { text: brandNames(st).cinema.toUpperCase(), alignment: 'center', fontSize: 40, bold: true, characterSpacing: 3, color: '#17120c', margin: [0, 2, 0, 0] },
+          { canvas: [{ type: 'line', x1: 207, y1: 0, x2: 287, y2: 0, lineWidth: 1.5, lineColor: '#e8772e' }], margin: [0, 14, 0, 14] },
+          { text: 'Les affiches de cinéma', alignment: 'center', fontSize: 30, bold: true, color: '#17120c', margin: [0, 0, 0, 6] },
+          { text: 'sont en vente au cinéma !', alignment: 'center', fontSize: 19, color: '#17120c' },
           { qr: publicUrl, fit: 290, alignment: 'center', margin: [0, 44, 0, 30], foreground: '#000' },
           { text: 'Scannez ce code avec l’appareil photo de votre téléphone', alignment: 'center', fontSize: 15, bold: true, color: '#211d18' },
           { text: 'pour découvrir toutes les affiches disponibles, leurs formats et leurs prix.', alignment: 'center', fontSize: 12, color: '#6b6458', margin: [0, 6, 0, 0] },
