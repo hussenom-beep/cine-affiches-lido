@@ -154,6 +154,45 @@ p { margin: 0; }
 .badge.gray { background: #f0ede8; color: #6b665e; border-color: #e1dcd3; }
 .badge.brand { background: var(--brand); color: #f5efe2; }
 .badge.gold { background: var(--gold-100); color: var(--gold-700); border-color: #ecd9ad; }
+.badge.soon { background: var(--accent-bg); color: #a54a12; border-color: #f6cfb0; }
+.badge .icon { width: 13px; height: 13px; }
+.alert.warn { background: var(--accent-bg); border-color: #f6cfb0; color: #8a3d0e; }
+.resa-note { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; font-size: 12px; font-weight: 800; color: #a54a12; white-space: nowrap; }
+.resa-note .icon { width: 13px; height: 13px; }
+.nav-count { margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 99px; background: var(--accent); color: var(--accent-ink); font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+.nav-count[hidden] { display: none; }
+.bottom-nav a { position: relative; }
+.bottom-nav .nav-count { position: absolute; top: 2px; left: calc(50% + 6px); margin: 0; min-width: 18px; height: 18px; font-size: 10.5px; }
+
+/* Double authentification */
+.mfa-steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 14px; font-size: 14.5px; }
+.mfa-steps li::marker { font-weight: 800; color: var(--accent-600); }
+.mfa-qr { width: 196px; max-width: 100%; padding: 10px; background: #fff; border-radius: 14px; border: 1px solid var(--line); }
+.mfa-qr svg { display: block; width: 100%; height: auto; }
+.mfa-key { border: 1px dashed var(--line-2); border-radius: 14px; padding: 12px 14px; background: var(--surface); }
+.mfa-key code { font-size: 14.5px; letter-spacing: .06em; overflow-wrap: anywhere; padding: 8px 0; }
+
+/* Réservations */
+.resa-list { display: flex; flex-direction: column; gap: 12px; }
+.resa { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow-1); }
+.resa.overdue { border-color: var(--danger-line); box-shadow: inset 4px 0 0 var(--danger); }
+.resa.to_notify, .resa.to_remind { border-color: #f6cfb0; box-shadow: inset 4px 0 0 var(--accent); }
+.resa .poster { border-radius: 8px; }
+.resa-num { display: flex; align-items: center; justify-content: center; width: 58px; height: 58px; border-radius: 14px; background: var(--accent-bg); color: var(--accent-600); }
+.resa h3 { font-size: 15.5px; font-weight: 800; line-height: 1.25; }
+.resa .who { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; font-weight: 700; }
+.resa .phone { display: inline-flex; align-items: center; gap: 6px; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 14px; }
+.resa .actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
+.resa .meta-line { font-size: 12.5px; color: var(--ink-3); margin-top: 4px; }
+.todo-card { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; border: 1px solid #f6cfb0; background: var(--accent-bg); color: #8a3d0e; text-decoration: none; font-weight: 700; }
+.todo-card .icon { color: var(--accent-600); }
+
+/* Vitrine : disponibilité */
+.avail { display: inline-flex; align-items: center; gap: 5px; min-height: 22px; padding: 3px 9px; line-height: 1.2; border-radius: 99px; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; width: fit-content; }
+.avail.ok { background: rgb(201 164 92 / .12); color: var(--gold-300); border: 1px solid rgb(201 164 92 / .35); }
+.avail.soon { background: rgb(232 119 46 / .14); color: #f5a26b; border: 1px solid rgb(232 119 46 / .45); }
+.avail.full { background: rgb(255 255 255 / .05); color: var(--ink-3); border: 1px solid var(--line-2); }
+.avail-line { font-size: 12.5px; color: #f5a26b; font-weight: 700; margin-top: -4px; }
 
 .chips { display: flex; gap: 8px; overflow-x: auto; }
 .chip { flex-shrink: 0; height: 38px; padding: 0 15px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--surface); font-weight: 700; font-size: 14px; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
@@ -278,7 +317,7 @@ body.pub .chip[aria-checked="true"] { background: var(--accent); border-color: v
 .sort-select { position: relative; display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line-2); background: var(--surface); font-weight: 700; font-size: 13.5px; color: var(--ink-2); flex-shrink: 0; }
 body.pub .sort-select { background: transparent; color: var(--gold-300); }
 .sort-select select { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
-.section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.section-title { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 12px; margin-bottom: 16px; }
 .section-title h2 { font-family: var(--display); font-size: 24px; font-weight: 600; letter-spacing: -.005em; display: flex; align-items: center; gap: 8px; }
 .pub-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .26em; text-transform: uppercase; color: var(--gold-500); margin-bottom: 5px; }
 body.pub .section-title h2 { font-size: 26px; }
@@ -395,6 +434,7 @@ body.pub .dialog { background: var(--bg); box-shadow: 0 0 0 1px var(--line), var
 .page-head h1 { font-family: var(--display); font-size: clamp(28px, 4vw, 34px); font-weight: 600; letter-spacing: -.01em; }
 .page-head h1::after { content: ''; display: block; width: 34px; height: 2px; margin-top: 10px; background: var(--accent); border-radius: 2px; }
 .page-head p { color: var(--ink-3); margin-top: 4px; }
+.page-head > .grow { flex: 1 1 280px; }
 .back { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 6px -8px; padding: 4px 8px; border-radius: 8px; font-size: 13.5px; font-weight: 700; color: var(--ink-3); text-decoration: none; }
 .back:hover { background: rgb(0 0 0 / .05); }
 .mobile-top { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 10px 16px; background: var(--night); color: #f3ead9; position: sticky; top: 0; z-index: 25; box-shadow: inset 0 -1px 0 rgb(201 164 92 / .35); }
@@ -557,7 +597,7 @@ export const REASONS = {
 export const REMOVAL_REASONS = ['sale', 'internal_reservation', 'damaged', 'other']
 export const ADDITION_REASONS = ['stock_in', 'return', 'other']
 export const STATUS_LABELS = { published: 'Publiée', hidden: 'Masquée', archived: 'Archivée' }
-export const AVAILABILITY_LABELS = { available: 'Disponible', soldout: 'Épuisée', hidden: 'Masquée', archived: 'Archivée' }
+export const AVAILABILITY_LABELS = { available: 'Disponible', upcoming: 'À venir', soldout: 'Épuisée', hidden: 'Masquée', archived: 'Archivée' }
 export const ROLE_LABELS = { owner: 'Administrateur principal', admin: 'Administrateur' }
 export const ADMIN_STATUS_LABELS = { invited: 'Invitation en attente', active: 'Actif', disabled: 'Désactivé' }
 export const MIN_PASSWORD = 8
@@ -669,7 +709,7 @@ export function sortVisuals(items, sort) {
 }
 export function filterCatalog(items, { query = '', format = 'all', sort = 'title-asc' } = {}) {
   return sortVisuals(
-    items.filter((v) => (format === 'all' || v.formats.some((f) => f.code === format)) && matchesQuery(publicSearchText(v), query)),
+    items.filter((v) => (format === 'all' || (format === 'upcoming' ? v.upcoming === true : v.formats.some((f) => f.code === format))) && matchesQuery(publicSearchText(v), query)),
     sort,
   )
 }
@@ -693,13 +733,18 @@ export function quantityByFormat(v, formatId) {
   return v.stocks.filter((s) => s.format_id === formatId).reduce((s, x) => s + x.quantity, 0)
 }
 /** Statut affiché : archivée > masquée > épuisée (calculé) > disponible. */
-export function availability(v) {
+export function availability(v, today = todayParis()) {
   if (v.status === 'archived') return 'archived'
   if (v.status === 'hidden') return 'hidden'
+  if (isUpcoming(v, today)) return 'upcoming'
   return totalQuantity(v) > 0 ? 'available' : 'soldout'
 }
-export function isPubliclyVisible(v, activeFormatIds) {
-  return v.status === 'published' && v.stocks.some((s) => s.quantity > 0 && activeFormatIds.has(s.format_id))
+/** Même règle que la vitrine : un exemplaire libre (non réservé), ou affiche à venir avec du stock. */
+export function isPubliclyVisible(v, activeFormatIds, reservations = [], today = todayParis()) {
+  if (v.status !== 'published') return false
+  const stocks = v.stocks.filter((s) => s.quantity > 0 && activeFormatIds.has(s.format_id))
+  if (!stocks.length) return false
+  return isUpcoming(v, today) || stocks.some((s) => s.quantity - reservedQty(reservations, s.id) > 0)
 }
 export function effectivePrice(v, format) {
   const custom = (v.prices || []).find((p) => p.format_id === format.id)
@@ -806,7 +851,7 @@ export function buildInventoryRows(visuals, formats, locations, opts) {
 /* ── Adresses (routage) ──────────────────────────────────────────────── */
 export const ADMIN_BASE = '/espace-interne'
 const ADMIN_ROUTES = [
-  ['', 'dashboard'], ['/stock', 'stock'], ['/ajouter', 'add'], ['/affiche/:id', 'visual'],
+  ['', 'dashboard'], ['/stock', 'stock'], ['/reservations', 'reservations'], ['/ajouter', 'add'], ['/affiche/:id', 'visual'],
   ['/emplacements', 'locations'], ['/emplacements/:id', 'location'], ['/historique', 'history'],
   ['/inventaire', 'inventory'], ['/reglages', 'settings'], ['/administrateurs', 'admins'],
   ['/mot-de-passe-oublie', 'forgot'], ['/nouveau-mot-de-passe', 'recovery'], ['/activation', 'activation'],
@@ -828,6 +873,70 @@ export function matchRoute(pathname) {
   const m = path.match(/^\/affiche\/([^/]+)$/)
   if (m) return { area: 'public', name: 'catalog', params: { visualId: decodeURIComponent(m[1]) } }
   return { area: 'public', name: 'catalog', params: {} }
+}
+/* ── Dates (jour calendaire à Paris, format AAAA-MM-JJ) ── */
+const PARIS_DAY = new Intl.DateTimeFormat('fr-CA', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit', day: '2-digit' })
+export function todayParis(now = new Date()) { return PARIS_DAY.format(now) }
+export function parisDay(ts) { return ts ? PARIS_DAY.format(new Date(ts)) : null }
+export function addDays(iso, n) {
+  const d = new Date(`${iso}T12:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + n)
+  return d.toISOString().slice(0, 10)
+}
+export function daysBetween(a, b) { return Math.round((Date.parse(`${b}T12:00:00Z`) - Date.parse(`${a}T12:00:00Z`)) / 86400000) }
+export function isUpcoming(v, today = todayParis()) { return Boolean(v?.available_from && v.available_from > today) }
+export function formatDay(iso, opts = { day: 'numeric', month: 'long', year: 'numeric' }) {
+  return iso ? new Date(`${iso}T12:00:00Z`).toLocaleDateString('fr-FR', { ...opts, timeZone: 'UTC' }) : ''
+}
+
+/* ── Réservations clients ── */
+export const RES_STATES = {
+  overdue: 'Délai dépassé', to_notify: 'Client à prévenir', to_remind: 'À rappeler',
+  waiting: 'Pas encore en vente', ready: 'En attente de retrait', sold: 'Retirée', cancelled: 'Annulée',
+}
+export const RES_STATE_ORDER = ['overdue', 'to_notify', 'to_remind', 'ready', 'waiting']
+export function reservedQty(reservations, stockId) {
+  let n = 0
+  for (const r of reservations) if (r.status === 'active' && r.stock_id === stockId) n += r.quantity
+  return n
+}
+/**
+ * État d'une réservation en cours.
+ * Le délai de retrait démarre le jour où l'affiche est en vente (ou le jour de la réservation si elle l'était déjà).
+ */
+export function reservationInfo(r, visual, settings = {}, today = todayParis()) {
+  if (r.status !== 'active') return { state: r.status, due: null, start: null, daysLeft: null }
+  const created = parisDay(r.created_at)
+  const from = visual?.available_from || null
+  if (from && from > today) return { state: 'waiting', due: null, start: from, daysLeft: null }
+  const start = from && from > created ? from : created
+  const due = r.due_date || addDays(start, settings.pickup_days ?? 10)
+  const daysLeft = daysBetween(today, due)
+  const remind = settings.reminder_days ?? 3
+  let state = 'ready'
+  if (daysLeft < 0) state = 'overdue'
+  else if (from && from > created && !r.notified_at) state = 'to_notify'
+  else if (remind > 0 && !r.reminded_at && daysLeft <= remind) state = 'to_remind'
+  return { state, due, start, daysLeft }
+}
+export function formatPhone(p) {
+  const d = String(p || '')
+  if (/^0\d{9}$/.test(d)) return d.replace(/(\d{2})(?=\d)/g, '$1 ').trim()
+  if (/^\+33\d{9}$/.test(d)) return `+33 ${d.slice(3, 4)} ${d.slice(4).replace(/(\d{2})(?=\d)/g, '$1 ').trim()}`
+  return d
+}
+export function maskPhone(p) {
+  const d = String(p || '')
+  if (d.length < 4) return '••'
+  return `${d.startsWith('+') ? d.slice(0, 3) : d.slice(0, 2)} •• •• ${d.slice(-4, -2)} ${d.slice(-2)}`
+}
+export function reservationMatches(r, visual, q) {
+  const t = normalize(q || '').trim()
+  if (!t) return true
+  const digits = String(q).replace(/\D/g, '')
+  const hay = normalize([r.customer_name, `n ${r.number}`, `${r.number}`, visual?.film?.title, visual?.reference_code, r.note].filter(Boolean).join(' '))
+  if (t.split(/\s+/).every((w) => hay.includes(w))) return true
+  return digits.length >= 3 && String(r.customer_phone || '').replace(/\D/g, '').includes(digits)
 }
 // ==LOGIC-END==
 
@@ -909,6 +1018,12 @@ const ICONS = {
   pen: '<path d="M12 20h9"/><path d="M16.38 3.62a1 1 0 0 1 3 3L7.37 18.64a2 2 0 0 1-.86.5l-2.87.84a.5.5 0 0 1-.62-.62l.84-2.87a2 2 0 0 1 .5-.86z"/>',
   ban: '<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/>',
   undo: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+  copy: '<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  bookmark: '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
 }
 const icon = (name, cls = '') => raw(`<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ''}</svg>`)
 
@@ -1210,6 +1325,7 @@ const api = {
   locations: async () => ok(await sb.from('locations').select('*').order('sort_order').order('name')),
   settings: async () => ok(await sb.from('app_settings').select('*').single()),
   admins: async () => ok(await sb.from('admin_profiles').select('*').order('created_at')),
+  reservations: () => fetchAll((a, b) => sb.from('reservations').select('*').order('created_at', { ascending: false }).range(a, b)),
   movements: async (q = {}) => {
     let r = sb.from('stock_movements').select('*').order('id', { ascending: false }).limit(q.limit || 50)
     if (q.visualId) r = r.eq('visual_id', q.visualId)
@@ -1304,7 +1420,8 @@ async function loadPublic(force = false) {
   const [catalog, settings] = await Promise.all([api.publicCatalog(), api.publicSettings()])
   const sig = JSON.stringify([catalog, settings])
   const changed = sig !== PUB.signature
-  PUB.catalog = catalog
+  // En vente : seuls les formats avec un exemplaire libre. À venir : tous les formats (réservables ou non).
+  PUB.catalog = catalog.map((v) => (v.upcoming ? v : { ...v, formats: v.formats.filter((f) => f.free !== false) }))
   PUB.settings = settings || {}
   PUB.signature = sig
   applyBrand(PUB.settings)
@@ -1416,13 +1533,23 @@ const shortFormat = (label) => label.replace(/\s*format$/i, '')
 function formatPrices(formats) {
   return html`<p class="prices">${formats.map((f, i) => html`${i ? html`<span> · </span>` : ''}${shortFormat(f.label)}${f.price_cents !== null && f.price_cents !== undefined ? ` ${formatPriceShort(f.price_cents)}` : ''}`)}</p>`
 }
+const shortDay = (iso) => formatDay(iso, { day: 'numeric', month: 'short' })
+/** Badge de disponibilité : Disponible · Bientôt (date) · Toutes réservées. */
+function availHtml(v, { short = false } = {}) {
+  if (!v.upcoming) return html`<span class="avail ok">Disponible</span>`
+  if (!v.formats.some((f) => f.free)) return html`<span class="avail full">Toutes réservées</span>`
+  return html`<span class="avail soon">${short ? 'Dès le' : 'Bientôt · dès le'} ${shortDay(v.available_from)}</span>`
+}
 function posterCard(v, i = 99, { ribbon } = {}) {
   const y = yearOf(v)
-  return html`<a class="pcard" href="${publicLink(v)}" aria-label="${v.title}${y ? ` (${y})` : ''}${v.label ? ` — ${v.label}` : ''}">
-    <div style="position:relative">${ribbon ? html`<span class="ribbon">${ribbon}</span>` : ''}${posterHtml(img.visual(v, 'card'), `Affiche : ${v.title}`, { eager: i < 4 })}</div>
+  const tag = v.upcoming ? 'Bientôt' : ribbon
+  return html`<a class="pcard" href="${publicLink(v)}" aria-label="${v.title}${y ? ` (${y})` : ''}${v.label ? ` — ${v.label}` : ''}${v.upcoming ? ` — en vente à partir du ${formatDay(v.available_from)}` : ''}">
+    <div style="position:relative">${tag ? html`<span class="ribbon">${tag}</span>` : ''}${posterHtml(img.visual(v, 'card'), `Affiche : ${v.title}`, { eager: i < 4 })}</div>
     <div class="stack tight" style="gap:7px;padding:0 2px">
       <h3 class="clamp2">${v.title}</h3>
       <p class="meta">${y || 'Année inconnue'}${v.label ? html` · ${v.label}` : ''}</p>
+      ${availHtml(v, { short: true })}
+      ${v.upcoming && v.formats.some((f) => f.free) ? html`<p class="avail-line">Réservation possible en caisse</p>` : ''}
       ${formatPrices(v.formats)}
     </div></a>`
 }
@@ -1434,8 +1561,10 @@ function renderPublicResults(appendOnly = false) {
   const format = p.get('format') || 'all'
   const sort = SORTS[p.get('tri')] ? p.get('tri') : 'title-asc'
   const formats = catalogFormats(PUB.catalog)
-  setHTML($('#pub-formats'), [{ code: 'all', label: 'Toutes' }, ...formats].map((f) =>
-    html`<button class="chip" role="radio" aria-checked="${String(format === f.code)}" data-format="${f.code}">${f.code === 'all' ? f.label : shortFormat(f.label)}</button>`))
+  const chips = [{ code: 'all', label: 'Toutes' }, ...formats]
+  if (PUB.catalog.some((v) => v.upcoming)) chips.push({ code: 'upcoming', label: 'Bientôt' })
+  setHTML($('#pub-formats'), chips.map((f) =>
+    html`<button class="chip" role="radio" aria-checked="${String(format === f.code)}" data-format="${f.code}">${f.code === 'all' || f.code === 'upcoming' ? f.label : shortFormat(f.label)}</button>`))
   $('#pub-sort-label').textContent = sort === 'title-asc' ? 'Trier' : SORTS[sort]
 
   const searching = query.trim() !== '' || format !== 'all'
@@ -1497,9 +1626,12 @@ function syncPublicDetail(visualId) {
           ${meta ? html`<p class="meta">${meta}</p>` : ''}
           ${v.director ? html`<p class="muted small" style="margin-top:2px">Réalisation : ${v.director}</p>` : ''}
         </div>
-        <section class="menu-prices" aria-label="Formats disponibles">
-          <ul>${v.formats.map((f) => html`<li><span>${f.label}</span><span class="dots" aria-hidden="true"></span>
-            ${f.price_cents !== null && f.price_cents !== undefined ? html`<span class="price">${formatPriceShort(f.price_cents)}</span>` : html`<span class="muted small">Disponible</span>`}</li>`)}</ul>
+        <div class="stack tight">${availHtml(v)}
+          ${v.upcoming ? html`<p style="color:var(--ink-2);font-size:14.5px">En vente à partir du <b>${formatDay(v.available_from)}</b>.
+            ${v.formats.some((f) => f.free) ? html`<span style="color:#f5a26b;font-weight:700">Réservation possible dès maintenant en caisse.</span>` : 'Tous les exemplaires sont déjà réservés.'}</p>` : ''}</div>
+        <section class="menu-prices" aria-label="Formats">
+          <ul>${v.formats.map((f) => html`<li><span>${f.label}${v.upcoming && !f.free ? html` <span class="muted small">(réservé)</span>` : ''}</span><span class="dots" aria-hidden="true"></span>
+            ${f.price_cents !== null && f.price_cents !== undefined ? html`<span class="price">${formatPriceShort(f.price_cents)}</span>` : html`<span class="muted small">${v.upcoming ? 'Bientôt' : 'Disponible'}</span>`}</li>`)}</ul>
         </section>
         <div class="ref-card"><div><p>Référence à indiquer à la caisse</p>${s.contact_note ? html`<p style="margin-top:2px;color:var(--ink-2)">${s.contact_note}</p>` : ''}</div><span class="code">${v.reference_code}</span></div>
         ${v.overview ? html`<p style="color:var(--ink-2);line-height:1.7;font-size:14.5px">${v.overview}</p>` : ''}
@@ -1533,7 +1665,7 @@ function startPublicRefresh() {
    F. ADMINISTRATION — session, droits, mise en page
    ═══════════════════════════════════════════════════════════════════════ */
 const ADM = {
-  profile: null, visuals: [], formats: [], locations: [], settings: null,
+  profile: null, visuals: [], formats: [], locations: [], settings: null, reservations: [],
   loaded: false, shell: false, refreshView: null, channel: null, lastLoad: 0, movementVersion: 0,
 }
 const isOwner = () => ADM.profile?.role === 'owner' && ADM.profile?.status === 'active'
@@ -1541,9 +1673,32 @@ const activeFormats = () => ADM.formats.filter((f) => f.is_active)
 const activeFormatIds = () => new Set(activeFormats().map((f) => f.id))
 
 async function loadAdminData() {
-  const [visuals, formats, locations, settings] = await Promise.all([api.visuals(), api.formats(), api.locations(), api.settings()])
-  Object.assign(ADM, { visuals, formats, locations, settings, loaded: true, lastLoad: Date.now() })
+  const [visuals, formats, locations, settings, reservations] = await Promise.all([api.visuals(), api.formats(), api.locations(), api.settings(), api.reservations()])
+  Object.assign(ADM, { visuals, formats, locations, settings, reservations, loaded: true, lastLoad: Date.now() })
   applyBrand(settings)
+  updateResaBadge()
+}
+/** Réservations demandant une action (client à prévenir, à rappeler, délai dépassé). */
+function resaTodo() {
+  const today = todayParis()
+  let n = 0
+  for (const r of ADM.reservations) {
+    if (r.status !== 'active') continue
+    const st = reservationInfo(r, findVisual(r.visual_id), ADM.settings, today).state
+    if (st === 'overdue' || st === 'to_notify' || st === 'to_remind') n++
+  }
+  return n
+}
+function updateResaBadge() {
+  const n = ADM.loaded ? resaTodo() : 0
+  $$('[data-nav="reservations"] .nav-count').forEach((el) => { el.textContent = n ? String(n) : ''; el.hidden = !n })
+}
+let purgeDone = false
+/** Effacement automatique des données clients 30 jours après la clôture (une fois par session). */
+function purgeOldReservations() {
+  if (purgeDone) return
+  purgeDone = true
+  api.rpc('purge_reservations', {}).then((n) => { if (n) reloadAdmin() }).catch(() => { purgeDone = false })
 }
 async function reloadAdmin({ quiet = true } = {}) {
   try { await loadAdminData(); ADM.refreshView?.() } catch (e) { if (!quiet) toast(errMsg(e), 'error') }
@@ -1556,6 +1711,7 @@ function subscribeRealtime() {
     ADM.channel = sb.channel('ca-stock')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'stocks' }, bump)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'poster_visuals' }, bump)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, bump)
       .subscribe()
   } catch { /* temps réel indisponible : actualisation au retour sur l'onglet */ }
 }
@@ -1583,7 +1739,8 @@ window.addEventListener('ca:recheck-access', () => { if (currentRoute?.area === 
 async function signOut(silent = false) {
   unsubscribeRealtime()
   await sb.auth.signOut().catch(() => {})
-  Object.assign(ADM, { profile: null, visuals: [], loaded: false, shell: false, refreshView: null })
+  Object.assign(ADM, { profile: null, visuals: [], reservations: [], loaded: false, shell: false, refreshView: null })
+  purgeDone = false
   if (!silent) toast('Vous êtes déconnecté.', 'info')
   navigate(A(), { replace: true })
 }
@@ -1605,12 +1762,14 @@ async function renderAdmin(route) {
   if (!p) return renderAuthMessage('Accès refusé', 'Ce compte n’est pas autorisé à accéder à l’administration du cinéma.', true)
   if (p.status === 'invited') return navigate(A('/activation'), { replace: true })
   if (p.status === 'disabled') return renderAuthMessage('Compte désactivé', 'Ce compte administrateur a été désactivé. Contactez l’administrateur principal.', true)
+  if (!(await mfaGate(p))) { ADM.shell = false; return }
 
   if (!ADM.loaded) {
     ADM.shell = false
     setHTML($('#app'), html`<div class="boot"><span class="spinner"></span> Chargement du stock…</div>`)
     try { await loadAdminData() } catch (e) { return renderAuthMessage('Impossible de charger les données', errMsg(e), false, true) }
     subscribeRealtime()
+    purgeOldReservations()
   }
   if (!ADM.shell) mountAdminShell()
   updateNav(route.name)
@@ -1630,6 +1789,7 @@ async function renderAdmin(route) {
 const NAV = [
   ['dashboard', '', 'home', 'Tableau de bord', 'Accueil'],
   ['stock', '/stock', 'box', 'Stock des affiches', 'Stock'],
+  ['reservations', '/reservations', 'bookmark', 'Réservations', 'Réservations'],
   ['locations', '/emplacements', 'pin', 'Emplacements'],
   ['history', '/historique', 'history', 'Historique', 'Historique'],
   ['inventory', '/inventaire', 'printer', 'Inventaire PDF'],
@@ -1646,7 +1806,7 @@ function mountAdminShell() {
     <aside class="side"><div class="grain" style="position:absolute;inset:0;opacity:.6;pointer-events:none"></div>
       <div class="brand" style="position:relative">${wordmarkHtml(s, 'sm', A())}<span class="role">Espace interne</span></div>
       <a class="btn btn-accent lg add" href="${A('/ajouter')}" style="position:relative">${icon('plus')} Ajouter une affiche</a>
-      <nav aria-label="Navigation administration" style="position:relative">${nav.map(([k, p, ic, label]) => html`<a href="${A(p)}" data-nav="${k}">${icon(ic)} ${label}</a>`)}</nav>
+      <nav aria-label="Navigation administration" style="position:relative">${nav.map(([k, p, ic, label]) => html`<a href="${A(p)}" data-nav="${k}">${icon(ic)} ${label}${k === 'reservations' ? html`<span class="nav-count" hidden></span>` : ''}</a>`)}</nav>
       <div class="foot" style="position:relative">
         <p class="me truncate">${ADM.profile.display_name || ADM.profile.email}<br>${ROLE_LABELS[ADM.profile.role]}</p>
         <a href="/" target="_blank" rel="noopener">${icon('external')} Voir la vitrine publique</a>
@@ -1660,13 +1820,13 @@ function mountAdminShell() {
       <a href="${A()}" data-nav="dashboard">${icon('home')}<span>Accueil</span></a>
       <a href="${A('/stock')}" data-nav="stock">${icon('box')}<span>Stock</span></a>
       <a href="${A('/ajouter')}" class="fab" data-nav="add" aria-label="Ajouter une affiche"><span>${icon('plus')}</span><span style="width:auto;height:auto;background:none;border:0;box-shadow:none;color:var(--ink-2)">Ajouter</span></a>
-      <a href="${A('/historique')}" data-nav="history">${icon('history')}<span>Historique</span></a>
+      <a href="${A('/reservations')}" data-nav="reservations">${icon('bookmark')}<span>Réservations</span><span class="nav-count" hidden></span></a>
       <button data-act="more">${icon('menu')}<span>Plus</span></button>
     </div></nav></div>`)
   $('#app').onclick = (e) => {
     if (e.target.closest('[data-act="logout"]')) signOut()
     if (e.target.closest('[data-act="more"]')) {
-      const m = openModal({ title: 'Menu', body: html`<div class="stack tight">${nav.slice(2).map(([k, p, ic, label]) => html`<a class="btn btn-ghost block" style="justify-content:flex-start;height:52px" href="${A(p)}" data-close>${icon(ic)} ${label}</a>`)}
+      const m = openModal({ title: 'Menu', body: html`<div class="stack tight">${nav.filter((n) => !['dashboard', 'stock', 'reservations'].includes(n[0])).map(([k, p, ic, label]) => html`<a class="btn btn-ghost block" style="justify-content:flex-start;height:52px" href="${A(p)}" data-close>${icon(ic)} ${label}</a>`)}
         <a class="btn btn-ghost block" style="justify-content:flex-start;height:52px" href="/" target="_blank" rel="noopener">${icon('external')} Voir la vitrine publique</a>
         <button class="btn btn-danger-ghost block" style="justify-content:flex-start;height:52px" data-logout>${icon('logout')} Se déconnecter</button>
         <p class="muted xs" style="padding:8px 4px">Connecté : ${ADM.profile.email} · ${ROLE_LABELS[ADM.profile.role]}</p></div>` })
@@ -1677,6 +1837,7 @@ function mountAdminShell() {
 function updateNav(name) {
   const key = NAV_ALIAS[name] || name
   $$('[data-nav]').forEach((a) => (a.dataset.nav === key ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')))
+  updateResaBadge()
 }
 
 function pageHead(title, subtitle = '', { back, actions } = {}) {
@@ -1713,6 +1874,138 @@ function renderAuthMessage(title, message, withSignOut, withRetry) {
     <a class="link" style="text-align:center" href="/">Retour à la vitrine</a></div>`)
   $('[data-out]', card)?.addEventListener('click', () => signOut(true))
   $('[data-retry]', card)?.addEventListener('click', () => render())
+}
+
+/* ── Double authentification (code à 6 chiffres d'une application du téléphone) ──
+   La base de données refuse toute donnée tant que la session n'a pas été validée par un code
+   (quand l'option est obligatoire) : ces écrans ne sont que le chemin pour y arriver. */
+async function mfaLevel() {
+  try { return (await sb.auth.mfa.getAuthenticatorAssuranceLevel()).data } catch { return null }
+}
+async function verifiedTotp() {
+  const { data, error } = await sb.auth.mfa.listFactors()
+  if (error) throw error
+  return data?.totp || []
+}
+/** true = accès autorisé ; false = un écran de double authentification est affiché. */
+async function mfaGate(p) {
+  const lvl = await mfaLevel()
+  if (!lvl || lvl.currentLevel === 'aal2') return true
+  if (lvl.nextLevel === 'aal2') { renderMfaChallenge(); return false }
+  if (p.mfa_required) { renderMfaSetupPage(); return false }
+  return true
+}
+function mfaErrorMessage(e) {
+  const m = String(e?.message || ''), code = e?.code || ''
+  if (code === 'mfa_verification_failed' || /invalid totp|invalid code|verification failed/i.test(m)) return 'Code incorrect ou expiré. Saisissez le code affiché en ce moment (il change toutes les 30 secondes). Vérifiez aussi que l’heure de votre téléphone est automatique.'
+  if (code === 'over_request_rate_limit' || e?.status === 429) return 'Trop de tentatives. Patientez une minute avant de réessayer.'
+  if (code === 'mfa_totp_enroll_not_enabled' || /enroll.*disabled|not enabled/i.test(m)) return 'La double authentification n’est pas activée sur le serveur Supabase (Authentication → Multi-Factor → TOTP).'
+  return errMsg(e)
+}
+const codeInput = (id = 'mfa-code') => html`<input class="input mono" id="${id}" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="123456" style="font-size:24px;letter-spacing:.3em;text-align:center;height:60px" required>`
+const cleanCode = (v) => String(v || '').replace(/\D/g, '').slice(0, 6)
+
+function renderMfaChallenge() {
+  const card = authShell('Code de vérification', 'Double authentification', html`<form class="stack" data-mfa novalidate>
+    <p class="muted small">Ouvrez votre application d’authentification (Google Authenticator, Microsoft Authenticator…) et saisissez le code à 6 chiffres affiché pour <b>${brandNames(ADM.settings || PUB.settings || {}).full}</b>.</p>
+    <div data-alert></div>
+    <div class="field"><label for="mfa-code">Code à 6 chiffres</label>${codeInput()}</div>
+    <button class="btn btn-primary lg block" type="submit">${icon('shield')} Valider</button>
+    <details class="small"><summary class="link" style="cursor:pointer">Téléphone perdu ou changé ?</summary>
+      <div class="stack tight muted" style="margin-top:8px">
+        <p>• Si vous avez noté votre <b>clé de secours</b> : ajoutez-la dans l’application d’authentification du nouveau téléphone (« Saisir une clé de configuration »), puis saisissez le code.</p>
+        <p>• Sinon, demandez à l’administrateur principal de <b>réinitialiser votre double authentification</b> (Gestion des administrateurs). Vous pourrez alors activer le nouveau téléphone.</p></div></details>
+    <button type="button" class="btn btn-ghost block" data-out>Se déconnecter</button></form>`)
+  const f = $('[data-mfa]', card)
+  f.code.focus()
+  f.code.addEventListener('input', () => { f.code.value = cleanCode(f.code.value); if (f.code.value.length === 6) f.requestSubmit() })
+  $('[data-out]', card).onclick = () => signOut(true)
+  f.onsubmit = (e) => {
+    e.preventDefault()
+    const code = cleanCode(f.code.value)
+    if (code.length !== 6) return formAlert(card, 'error', 'Saisissez les 6 chiffres du code.')
+    busy($('[type=submit]', f), async () => {
+      try {
+        const factors = await verifiedTotp()
+        let lastErr = null
+        for (const fa of factors) {
+          const { error } = await sb.auth.mfa.challengeAndVerify({ factorId: fa.id, code })
+          if (!error) { ADM.profile = null; return render() }
+          lastErr = error
+        }
+        throw lastErr || new Error('Aucun appareil enregistré.')
+      } catch (err) { f.code.value = ''; f.code.focus(); formAlert(card, 'error', mfaErrorMessage(err)) }
+    })
+  }
+}
+
+/** Écran d'activation : QR code (ordinateur), bouton direct et clé (téléphone). */
+async function mountMfaEnroll(box, { onDone, replaceOthers = false } = {}) {
+  setHTML(box, html`<div class="boot" style="min-height:120px"><span class="spinner"></span> Préparation…</div>`)
+  let factor
+  try {
+    // Nettoyage d'une activation commencée mais jamais terminée
+    const { data } = await sb.auth.mfa.listFactors()
+    for (const fa of (data?.all || []).filter((x) => x.status !== 'verified')) await sb.auth.mfa.unenroll({ factorId: fa.id }).catch(() => {})
+    const r = await sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Téléphone ${new Date().toLocaleDateString('fr-FR')} ${String(Date.now()).slice(-4)}`, issuer: brandNames(ADM.settings || PUB.settings || {}).full })
+    if (r.error) throw r.error
+    factor = r.data
+  } catch (e) { setHTML(box, html`<div class="alert error">${mfaErrorMessage(e)}</div>`); return }
+  const secret = factor.totp.secret
+  const pretty = secret.replace(/(.{4})/g, '$1 ').trim()
+  const phone = matchMedia('(pointer: coarse)').matches
+  const direct = html`<a class="btn btn-primary lg block multiline" href="${factor.totp.uri}">${icon('external')} Ajouter à mon application d’authentification</a>`
+  const qrBox = html`<div class="mfa-qr" data-qr aria-label="QR code à scanner avec l’application d’authentification"></div>`
+  const keyBox = html`<div class="mfa-key"><p class="label">Clé de secours (à noter et ranger en lieu sûr)</p>
+      <div class="row" style="gap:8px"><code class="mono grow" data-key>${pretty}</code><button type="button" class="btn btn-secondary sm" data-copy>${icon('copy')} Copier</button></div>
+      <p class="hint">Elle permet de retrouver vos codes sur un nouveau téléphone. Ne la communiquez à personne.</p></div>`
+  setHTML(box, html`<form class="stack" data-enroll novalidate>
+    <ol class="mfa-steps">
+      <li><b>Installez une application d’authentification</b> sur votre téléphone : Google Authenticator ou Microsoft Authenticator (gratuites). Sur iPhone, l’app « Mots de passe » convient aussi.</li>
+      ${phone ? html`<li><b>Sur ce téléphone :</b> appuyez sur le bouton ci-dessous, l’application s’ouvre et enregistre le compte. Revenez ensuite ici.
+          <div style="margin-top:10px">${direct}</div>
+          <p class="hint" style="margin-top:8px">Si rien ne s’ouvre : copiez la clé ci-dessous et, dans l’application, choisissez « + » puis « Saisir une clé de configuration ».</p></li>`
+        : html`<li><b>Scannez ce QR code</b> avec l’application (bouton « + » puis « Scanner un QR code »).<div style="margin-top:12px">${qrBox}</div></li>`}
+      <li><b>Saisissez le code à 6 chiffres</b> affiché par l’application :<div class="field" style="margin-top:8px">${codeInput('mfa-new')}</div></li>
+    </ol>
+    ${keyBox}
+    ${phone ? html`<details class="small"><summary class="link" style="cursor:pointer">Afficher le QR code (pour un autre appareil)</summary><div style="margin-top:10px">${qrBox}</div></details>` : ''}
+    <div data-alert></div>
+    <button class="btn btn-primary lg block" type="submit">${icon('shield')} Activer la double authentification</button></form>`)
+  loadQr().then((qrcode) => {
+    const qr = qrcode(0, 'M'); qr.addData(factor.totp.uri); qr.make()
+    $$('[data-qr]', box).forEach((el) => { el.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true }) })
+  }).catch(() => $$('[data-qr]', box).forEach((el) => { el.innerHTML = '<p class="xs muted">QR code indisponible : utilisez la clé.</p>' }))
+  $('[data-copy]', box).onclick = async () => {
+    try { await navigator.clipboard.writeText(secret); toast('Clé copiée.') } catch { toast('Copie impossible : recopiez la clé à la main.', 'error') }
+  }
+  const f = $('[data-enroll]', box)
+  f.code.addEventListener('input', () => { f.code.value = cleanCode(f.code.value) })
+  f.onsubmit = (e) => {
+    e.preventDefault()
+    const code = cleanCode(f.code.value)
+    const alertBox = (msg) => setHTML($('[data-alert]', f), msg ? html`<div class="alert error" role="alert">${msg}</div>` : '')
+    if (code.length !== 6) return alertBox('Saisissez les 6 chiffres affichés par l’application.')
+    busy($('[type=submit]', f), async () => {
+      try {
+        const { error } = await sb.auth.mfa.challengeAndVerify({ factorId: factor.id, code })
+        if (error) throw error
+        if (replaceOthers) {
+          const { data } = await sb.auth.mfa.listFactors()
+          for (const fa of (data?.all || []).filter((x) => x.id !== factor.id)) await sb.auth.mfa.unenroll({ factorId: fa.id }).catch(() => {})
+        }
+        await onDone?.()
+      } catch (err) { f.code.value = ''; alertBox(mfaErrorMessage(err)) }
+    })
+  }
+}
+function renderMfaSetupPage() {
+  const card = authShell('Sécurisez votre compte', 'Double authentification obligatoire', html`<div class="stack">
+    <p class="muted small">Pour protéger les données du cinéma (dont les coordonnées des clients), chaque connexion depuis un nouvel appareil demandera un code à 6 chiffres généré par votre téléphone. À activer une seule fois.</p>
+    <div data-enroll-box></div>
+    <button type="button" class="btn btn-ghost block" data-out>Se déconnecter</button></div>`)
+  $('[data-out]', card).onclick = () => signOut(true)
+  mountMfaEnroll($('[data-enroll-box]', card), { onDone: async () => { toast('Double authentification activée.'); ADM.profile = null; render() } })
 }
 
 function loginErrorMessage(e) {
@@ -1926,6 +2219,7 @@ ADMIN_PAGES.admins = async (page) => {
             : a.activated_at ? `Actif depuis le ${fmtDate(a.activated_at)}` : ''}${a.disabled_at ? ` · désactivé le ${fmtDate(a.disabled_at)}` : ''}</p></div>
         <div class="row wrap" style="gap:6px">
           ${a.status === 'invited' ? html`<button class="btn btn-secondary sm" data-act="resend">${icon('send')} Renvoyer</button>` : ''}
+          ${a.status === 'active' && !self ? html`<button class="btn btn-ghost sm" data-act="reset-mfa">${icon('shield')} Réinitialiser la double authentification</button>` : ''}
           ${a.status === 'active' && !self && a.role === 'admin' ? html`<button class="btn btn-primary sm" data-act="transfer">${icon('crown')} Transférer le rôle principal</button>` : ''}
           ${a.status === 'active' && !self && a.role === 'admin' ? html`<button class="btn btn-secondary sm" data-act="promote">Rendre principal aussi</button>` : ''}
           ${a.role === 'owner' && !self ? html`<button class="btn btn-secondary sm" data-act="demote">Passer administrateur</button>` : ''}
@@ -1964,6 +2258,11 @@ ADMIN_PAGES.admins = async (page) => {
       try { const r = await fn(); toast(r?.message || okMsg); await recheckAccess(); await load() } catch (err) { toast(errMsg(err), 'error') }
     })
     if (act === 'resend') return run(() => api.server('/api/admins', { method: 'POST', body: { action: 'resend', userId: id } }), 'Invitation renvoyée.')
+    if (act === 'reset-mfa') {
+      if (!(await confirmDialog({ title: 'Réinitialiser la double authentification ?', confirmLabel: 'Réinitialiser',
+        message: html`<p>À utiliser si <b>${who}</b> a perdu ou changé de téléphone. À sa prochaine connexion, il activera un nouveau téléphone. Aucune donnée n’est modifiée.</p><p class="muted small" style="margin-top:8px">En cas de vol du téléphone, désactivez plutôt le compte.</p>` }))) return
+      return run(() => api.server('/api/admins', { method: 'POST', body: { action: 'reset-mfa', userId: id } }), 'Double authentification réinitialisée.')
+    }
     if (act === 'transfer') {
       const r = await confirmDialog({
         title: 'Transférer le rôle principal ?',
@@ -2008,15 +2307,21 @@ ADMIN_PAGES.admins = async (page) => {
 /* ═══════════════════════════════════════════════════════════════════════
    I. STOCK : composants partagés
    ═══════════════════════════════════════════════════════════════════════ */
-const AVAIL_TONE = { available: 'ok', soldout: 'danger', hidden: 'warn', archived: 'gray' }
-const availBadge = (v) => { const a = availability(v); return html`<span class="badge ${AVAIL_TONE[a]}">${AVAILABILITY_LABELS[a]}</span>` }
+const AVAIL_TONE = { available: 'ok', upcoming: 'soon', soldout: 'danger', hidden: 'warn', archived: 'gray' }
+const availBadge = (v) => {
+  const a = availability(v)
+  return html`<span class="badge ${AVAIL_TONE[a]}">${a === 'upcoming' ? html`${icon('calendar')} En vente dès le ${formatDay(v.available_from, { day: 'numeric', month: 'short' })}` : AVAILABILITY_LABELS[a]}</span>`
+}
 const findVisual = (id) => ADM.visuals.find((v) => v.id === id)
+const stockReserved = (stockId) => reservedQty(ADM.reservations, stockId)
+const visualReserved = (v) => v.stocks.reduce((n, s) => n + stockReserved(s.id), 0)
 
 function qtyControl(row) {
   const q = row.stock.quantity
+  const free = q - stockReserved(row.stock.id)
   const d = `data-v="${esc(row.visual.id)}" data-f="${row.format.id}" data-l="${esc(row.location.id)}"`
   return html`<div class="qty">
-    <button type="button" ${raw(d)} data-qty="minus" ${attr(q <= 0, 'disabled')} aria-label="Retirer un exemplaire (${row.format.label}, ${row.location.name})">${icon('minus')}</button>
+    <button type="button" ${raw(d)} data-qty="minus" ${attr(free <= 0, 'disabled')} aria-label="Retirer un exemplaire (${row.format.label}, ${row.location.name})">${icon('minus')}</button>
     <output class="${q === 0 ? 'zero' : ''}" aria-label="${q} exemplaire${q > 1 ? 's' : ''}">${q}</output>
     <button type="button" class="plus" ${raw(d)} data-qty="plus" aria-label="Ajouter un exemplaire (${row.format.label}, ${row.location.name})">${icon('plus')}</button></div>`
 }
@@ -2033,9 +2338,14 @@ function visualCard(v, { locationId } = {}) {
         <p class="sub truncate"><span class="mono" style="color:var(--ink-2)">${v.reference_code}</span>${v.label ? ` · ${v.label}` : ''}</p>
         <div class="row wrap" style="gap:8px;margin-top:8px">${availBadge(v)}<span class="xs muted" style="font-weight:700">${plural(total, 'exemplaire')} au total</span></div>
       </div></div>
-    ${rows.length ? html`<div class="lines">${rows.map((r) => html`<div class="sline"><p class="where"><b>${r.format.label}</b> · ${r.location.name}</p>${qtyControl(r)}</div>`)}</div>`
+    ${rows.length ? html`<div class="lines">${rows.map((r) => html`<div class="sline"><p class="where"><b>${r.format.label}</b> · ${r.location.name}${reservedNote(r.stock)}</p>${qtyControl(r)}</div>`)}</div>`
       : html`<button class="dashed-btn" data-add-stock="${v.id}">${icon('packagePlus')} ${locationId ? 'Ajouter des exemplaires ici' : 'Remettre en stock'}</button>`}
   </article>`
+}
+
+function reservedNote(stock) {
+  const n = stockReserved(stock.id)
+  return n ? html`<span class="resa-note">${icon('bookmark')} ${n} réservé${n > 1 ? 's' : ''} · ${Math.max(stock.quantity - n, 0)} libre${stock.quantity - n > 1 ? 's' : ''}</span>` : ''
 }
 
 /** Clic sur −/+ et « Remettre en stock » dans n'importe quelle page d'administration. */
@@ -2075,22 +2385,28 @@ function rowLabel({ visualId, formatId, locationId }) {
 }
 
 function removeSheet(args, after) {
-  const { q, text } = rowLabel(args)
+  const { v, q, text } = rowLabel(args)
+  const stock = v?.stocks.find((s) => s.format_id === args.formatId && s.location_id === args.locationId)
+  const reserved = stock ? stockReserved(stock.id) : 0
+  const free = Math.max(q - reserved, 0)
+  const upcoming = isUpcoming(v)
   const m = openModal({
     title: 'Retirer du stock', size: 'sm',
-    body: html`<div class="stack"><p class="muted small">${text} — ${plural(q, 'exemplaire')} en stock</p>
-      <div class="row between" style="padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)"><b>Quantité à retirer</b>${stepperHtml('qty', 1, { min: 1, max: Math.max(1, q), label: 'Quantité à retirer' })}</div>
-      <div class="field"><label for="rm-note">Commentaire (facultatif)</label><input class="input" id="rm-note" name="note" placeholder="Nom du client, raison…"></div>
+    body: html`<div class="stack"><p class="muted small">${text} — ${plural(q, 'exemplaire')} en stock${reserved ? html` dont <b>${reserved} réservé${reserved > 1 ? 's' : ''}</b> pour des clients` : ''}</p>
+      ${upcoming ? html`<div class="alert warn">${icon('calendar')} Pas encore en vente : disponible à la vente à partir du <b>${formatDay(v.available_from)}</b>. Vous pouvez la réserver pour un client depuis sa fiche.</div>` : ''}
+      <div class="row between" style="padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)"><b>Quantité à retirer</b>${stepperHtml('qty', 1, { min: 1, max: Math.max(1, free), label: 'Quantité à retirer' })}</div>
+      <div class="field"><label for="rm-note">Commentaire (facultatif)</label><input class="input" id="rm-note" name="note" placeholder="Raison, précision…"></div>
       <p class="eyebrow">Motif</p>
-      <div class="grid2" style="gap:8px">${REMOVAL_REASONS.map((r, i) => html`<button class="btn ${i === 0 ? 'btn-primary' : 'btn-secondary'} lg" style="${i === 0 || r === 'other' ? 'grid-column:1/-1' : ''}" data-reason="${r}" ${attr(i === 0, 'data-autofocus')}>${REASONS[r]}</button>`)}</div></div>`,
+      <div class="grid2" style="gap:8px">${REMOVAL_REASONS.map((r, i) => html`<button class="btn ${i === 0 ? 'btn-primary' : 'btn-secondary'} lg" style="${i === 0 || r === 'other' ? 'grid-column:1/-1' : ''}" data-reason="${r}" ${attr(i === 0 && !upcoming, 'data-autofocus')} ${attr(r === 'sale' && upcoming, 'disabled')}>${REASONS[r]}${r === 'sale' && upcoming ? ` (dès le ${formatDay(v.available_from, { day: 'numeric', month: 'short' })})` : ''}</button>`)}</div></div>`,
   })
   m.el.addEventListener('click', (e) => {
     const b = e.target.closest('[data-reason]')
     if (!b) return
-    $$('[data-reason]', m.el).forEach((x) => { if (x !== b) x.disabled = true })
+    const all = $$('[data-reason]', m.el), was = all.map((x) => x.disabled)
+    all.forEach((x) => { if (x !== b) x.disabled = true })
     busy(b, async () => {
       const okk = await moveStock({ ...args, delta: -stepperValue(m.el, 'qty'), reason: b.dataset.reason, note: $('#rm-note', m.el).value })
-      $$('[data-reason]', m.el).forEach((x) => (x.disabled = false))
+      all.forEach((x, i) => (x.disabled = was[i]))
       if (okk) { m.close(); after?.() }
     })
   })
@@ -2172,7 +2488,8 @@ function correctSheet(v, row, after) {
   const m = openModal({ title: 'Corriger la quantité', size: 'sm',
     body: html`<div class="stack"><p class="muted small">${row.format.label} · ${row.location.name}</p>
       <p>Quantité enregistrée : <b>${row.stock.quantity}</b>. Indiquez le nombre réellement compté.</p>
-      ${stepperHtml('qty', row.stock.quantity, { min: 0, size: 'lg', label: 'Quantité comptée' })}
+      ${stockReserved(row.stock.id) ? html`<p class="hint">${icon('bookmark')} ${stockReserved(row.stock.id)} exemplaire(s) réservé(s) ici : la quantité ne peut pas descendre en dessous (annulez d’abord une réservation si besoin).</p>` : ''}
+      ${stepperHtml('qty', row.stock.quantity, { min: stockReserved(row.stock.id), size: 'lg', label: 'Quantité comptée' })}
       <div class="field"><label for="cs-note">Commentaire (facultatif)</label><input class="input" id="cs-note" placeholder="Ex. inventaire du 1er décembre"></div></div>`,
     footer: html`<button class="btn btn-primary lg block" data-ok>Enregistrer la correction</button>` })
   $('[data-ok]', m.el).addEventListener('click', (e) => busy(e.currentTarget, async () => {
@@ -2189,9 +2506,11 @@ function correctSheet(v, row, after) {
 }
 
 function transferSheet(v, row, after) {
+  const free = Math.max(row.stock.quantity - stockReserved(row.stock.id), 0)
+  if (!free) return toast('Tous les exemplaires de cet emplacement sont réservés : rien à déplacer.', 'error')
   const m = openModal({ title: 'Déplacer des exemplaires',
-    body: html`<div class="stack"><p class="muted small">${v.film.title} · ${v.reference_code} · ${row.format.label} · depuis <b>${row.location.name}</b> (${row.stock.quantity} en stock)</p>
-      <div class="field"><span class="label">Quantité à déplacer</span>${stepperHtml('qty', Math.min(row.stock.quantity, Math.max(1, row.stock.quantity)), { min: 1, max: Math.max(1, row.stock.quantity), size: 'lg', label: 'Quantité à déplacer' })}</div>
+    body: html`<div class="stack"><p class="muted small">${v.film.title} · ${v.reference_code} · ${row.format.label} · depuis <b>${row.location.name}</b> (${row.stock.quantity} en stock${free < row.stock.quantity ? `, ${free} libre${free > 1 ? 's' : ''}` : ''})</p>
+      <div class="field"><span class="label">Quantité à déplacer</span>${stepperHtml('qty', free, { min: 1, max: free, size: 'lg', label: 'Quantité à déplacer' })}</div>
       <div class="field"><span class="label">Vers l’emplacement</span>${locationPickerHtml('to', null, { exclude: row.location.id })}</div>
       <div class="field"><label for="ts-note">Commentaire (facultatif)</label><input class="input" id="ts-note"></div>
       <p class="hint">Le stock total ne change pas : deux lignes « Transfert d’emplacement » sont ajoutées à l’historique.</p></div>`,
@@ -2235,6 +2554,7 @@ function movementList(moves, { showVisual = true } = {}) {
 ADMIN_PAGES.dashboard = async (page) => {
   setHTML(page, html`${pageHead('Tableau de bord', fmtDay(new Date()) + ' · ' + brandNames(ADM.settings).full)}
     <div class="stats" data-stats></div>
+    <div data-todo></div>
     <a class="big-add" href="${A('/ajouter')}">${icon('plus')} Ajouter une affiche</a>
     <section class="section"><div class="section-title"><h2>Recherche rapide</h2></div>
       <div class="search">${icon('search')}<input class="input" type="search" data-q placeholder="Titre, année, référence (AF-0012), emplacement, format…" aria-label="Rechercher dans le stock" autocomplete="off">
@@ -2256,6 +2576,13 @@ ADMIN_PAGES.dashboard = async (page) => {
       ['packageX', s.soldOutRefs, 'Références épuisées', A('/stock?statut=soldout'), s.soldOutRefs > 0],
     ].map(([ic, n, l, href, alert]) => html`<a class="card stat ${alert ? 'alert-on' : ''}" href="${href}">${icon(ic)}<b>${n.toLocaleString('fr-FR')}</b><span>${l}</span></a>`))
   }
+  const drawTodo = () => {
+    const today = todayParis()
+    const counts = {}
+    for (const r of ADM.reservations) if (r.status === 'active') { const st = reservationInfo(r, findVisual(r.visual_id), ADM.settings, today).state; counts[st] = (counts[st] || 0) + 1 }
+    const parts = [['to_notify', 'client(s) à prévenir'], ['to_remind', 'client(s) à rappeler'], ['overdue', 'délai(s) dépassé(s)']].filter(([k]) => counts[k]).map(([k, l]) => `${counts[k]} ${l}`)
+    setHTML($('[data-todo]', page), parts.length ? html`<a class="todo-card" style="margin-top:14px" href="${A('/reservations')}">${icon('bell')}<span class="grow">Réservations : ${parts.join(' · ')}</span>${icon('chevR')}</a>` : '')
+  }
   const drawResults = () => {
     const q = input.value.trim()
     $('[data-clear]', page).classList.toggle('hidden', !q)
@@ -2275,7 +2602,7 @@ ADMIN_PAGES.dashboard = async (page) => {
   }
   input.addEventListener('input', drawResults)
   $('[data-clear]', page).addEventListener('click', () => { input.value = ''; drawResults(); input.focus() })
-  const refresh = () => { drawStats(); drawResults(); drawMoves() }
+  const refresh = () => { drawStats(); drawTodo(); drawResults(); drawMoves() }
   bindStockControls(page, refresh)
   ADM.refreshView = refresh
   refresh()
@@ -2335,7 +2662,9 @@ ADMIN_PAGES.visual = async (page, { id }) => {
     if (!v) return setHTML(page, html`<div class="empty"><h3>Affiche introuvable</h3><p>Ce visuel n’existe pas.</p><a class="btn btn-secondary" href="${A('/stock')}">Retour au stock</a></div>`)
     const f = v.film
     const total = totalQuantity(v)
-    const visible = isPubliclyVisible(v, activeFormatIds())
+    const visible = isPubliclyVisible(v, activeFormatIds(), ADM.reservations)
+    const resas = ADM.reservations.filter((r) => r.visual_id === v.id && r.status === 'active')
+    const freeTotal = v.stocks.reduce((n, s) => n + Math.max(s.quantity - stockReserved(s.id), 0), 0)
     const siblings = ADM.visuals.filter((x) => x.film_id === v.film_id && x.id !== v.id)
     const shownFormats = ADM.formats.filter((fm) => fm.is_active || quantityByFormat(v, fm.id) > 0)
     const rowsAll = stockRows([v], ADM.formats, ADM.locations, { includeEmpty: true })
@@ -2354,14 +2683,19 @@ ADMIN_PAGES.visual = async (page, { id }) => {
               <span class="hint">Pour distinguer les affiches d’un même film. Enregistré automatiquement.</span></div>
             <div class="field"><span class="label">Publication</span>${segHtml('status', v.status, Object.entries(STATUS_LABELS), 'block')}</div>
             <p class="hint">Une affiche publiée apparaît dans la vitrine dès qu’un exemplaire est en stock et disparaît quand le stock tombe à zéro. Rien n’est jamais supprimé.</p>
+            <div class="field"><label for="v-from">En vente à partir du</label>
+              <div class="row wrap" style="gap:8px"><input class="input" id="v-from" type="date" value="${v.available_from || ''}" style="max-width:220px">${v.available_from ? html`<button class="btn btn-ghost sm" data-act="from-clear">En vente dès maintenant</button>` : ''}</div>
+              <span class="hint">${isUpcoming(v) ? html`Vitrine : « Bientôt · dès le ${formatDay(v.available_from, { day: 'numeric', month: 'long' })} » avec « Réservation possible en caisse ». Vente impossible avant cette date.` : 'Laissez vide si l’affiche est vendable tout de suite. Sinon, elle reste réservable mais pas vendable avant la date.'}</span></div>
           </div>
+          <section><div class="section-title"><h2 style="font-size:21px">Réservations clients${resas.length ? ` · ${resas.length}` : ''}</h2><button class="btn btn-primary sm" data-act="reserve" ${attr(!freeTotal, 'disabled')}>${icon('bookmark')} Réserver pour un client</button></div>
+            ${resas.length ? html`<div class="resa-list">${resas.map((r) => resaCard(r, { showVisual: false }))}</div>` : html`<p class="muted small">${freeTotal ? 'Aucune réservation en cours.' : 'Aucun exemplaire libre à réserver.'}</p>`}</section>
           <section><div class="section-title"><h2 style="font-size:21px">Stock · ${plural(total, 'exemplaire')}</h2><button class="btn btn-primary sm" data-act="add">${icon('packagePlus')} Ajouter du stock</button></div>
             <div class="stack">${shownFormats.map((fm) => {
               const rows = rowsAll.filter((r) => r.format.id === fm.id)
               const q = quantityByFormat(v, fm.id)
               return html`<div class="card" style="padding:14px 16px"><div class="row between"><h3 class="display" style="font-size:18px;font-weight:600">${fm.label}${fm.is_active ? '' : html` <span class="xs muted">(désactivé)</span>`}</h3>
                 <span class="small" style="font-weight:800;color:${q ? 'var(--ok)' : 'var(--danger)'}">${q ? `${q} en stock` : 'Épuisé'}</span></div>
-                ${rows.map((r) => html`<div class="sline"><div class="where"><a href="${A(`/emplacements/${r.location.id}`)}" style="font-weight:800;color:var(--ink)">${r.location.name}</a>
+                ${rows.map((r) => html`<div class="sline"><div class="where"><a href="${A(`/emplacements/${r.location.id}`)}" style="font-weight:800;color:var(--ink)">${r.location.name}</a>${reservedNote(r.stock)}
                   <div class="row" style="gap:2px;margin-top:2px"><button class="btn btn-ghost sm" style="height:30px;padding:0 6px" data-correct="${r.stock.id}">${icon('listChecks')} Corriger</button>
                   <button class="btn btn-ghost sm" style="height:30px;padding:0 6px" data-transfer="${r.stock.id}" ${attr(r.stock.quantity === 0, 'disabled')}>${icon('transfer')} Déplacer</button></div></div>${qtyControl(r)}</div>`)}
                 <button class="btn btn-ghost sm" style="margin-top:6px;color:var(--brand-700)" data-add-format="${fm.id}">${icon('plus')} ${rows.length ? 'Autre emplacement' : 'Ajouter des exemplaires'}</button></div>`
@@ -2386,6 +2720,15 @@ ADMIN_PAGES.visual = async (page, { id }) => {
 
     $('[data-act="zoom"]', page).onclick = () => lightbox(img.visual(v, 'original'), v.label || f.title)
     $('[data-act="add"]', page).onclick = () => addStockSheet(v, {}, draw)
+    $('[data-act="reserve"]', page).onclick = () => reserveSheet(v, draw)
+    const fromInput = $('#v-from', page)
+    const saveFrom = async (val) => {
+      if ((val || null) === (v.available_from || null)) return
+      try { await api.update('poster_visuals', { id: v.id }, { available_from: val || null }); v.available_from = val || null; toast(val ? `En vente à partir du ${formatDay(val)}` : 'En vente dès maintenant'); draw() } catch (err) { toast(errMsg(err), 'error'); draw() }
+    }
+    fromInput.onchange = () => saveFrom(fromInput.value)
+    const fc = $('[data-act="from-clear"]', page)
+    if (fc) fc.onclick = () => saveFrom(null)
     $('[data-act="photo"]', page).onclick = () => photoSheet(async (photo) => {
       const folder = `visuals/${v.id}/${Date.now()}`
       const full = `${folder}/full.jpg`, thumb = `${folder}/thumb.jpg`
@@ -2438,6 +2781,7 @@ ADMIN_PAGES.visual = async (page, { id }) => {
     }
   }
   bindStockControls(page, draw)
+  bindResaActions(page, draw)
   ADM.refreshView = draw
   await draw()
 }
@@ -2547,6 +2891,245 @@ ADMIN_PAGES.history = async (page) => {
   $('[data-more]', page).onclick = (e) => busy(e.currentTarget, async () => { try { const r = await query(items.at(-1).id); items = items.concat(r); draw(); $('[data-more]', page).classList.toggle('hidden', r.length < 50) } catch (err) { toast(errMsg(err), 'error') } })
   ADM.refreshView = load
   load()
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   K bis. RÉSERVATIONS CLIENTS (saisies en caisse par les administrateurs)
+   Nom et téléphone : visibles uniquement dans l'espace interne, masqués par défaut,
+   effacés automatiquement 30 jours après la vente ou l'annulation.
+   ═══════════════════════════════════════════════════════════════════════ */
+const RES_TONE = { overdue: 'danger', to_notify: 'soon', to_remind: 'soon', waiting: 'gray', ready: 'ok', sold: 'gray', cancelled: 'gray' }
+const resaInfo = (r) => reservationInfo(r, findVisual(r.visual_id), ADM.settings)
+const resaLabel = (r) => `n° ${r.number}`
+
+function resaStateText(r, info) {
+  const v = findVisual(r.visual_id)
+  if (info.state === 'waiting') return `En vente le ${formatDay(v?.available_from, { day: 'numeric', month: 'long' })} · le délai de retrait démarrera ce jour-là`
+  if (info.state === 'overdue') return `Délai dépassé depuis ${plural(-info.daysLeft, 'jour')} (retrait avant le ${formatDay(info.due, { day: 'numeric', month: 'long' })})`
+  if (info.due) return `À retirer avant le ${formatDay(info.due, { day: 'numeric', month: 'long' })}${info.daysLeft === 0 ? ' (aujourd’hui)' : ` · ${plural(info.daysLeft, 'jour')} restant${info.daysLeft > 1 ? 's' : ''}`}`
+  return ''
+}
+
+function resaCard(r, { showVisual = true } = {}) {
+  const v = findVisual(r.visual_id)
+  const f = ADM.formats.find((x) => x.id === r.format_id)
+  const l = ADM.locations.find((x) => x.id === r.location_id)
+  const info = resaInfo(r)
+  const active = r.status === 'active'
+  const purged = Boolean(r.purged_at)
+  const sellable = active && info.state !== 'waiting'
+  return html`<article class="resa ${active ? info.state : ''}" data-resa="${r.id}">
+    ${showVisual ? html`<a href="${A(`/affiche/${r.visual_id}`)}" aria-label="Fiche de l’affiche">${posterHtml(v ? img.visual(v, 'thumb') : null, v?.film.title || '')}</a>` : html`<span class="resa-num">${icon('bookmark')}</span>`}
+    <div style="min-width:0">
+      <div class="row wrap" style="gap:6px;justify-content:space-between;align-items:flex-start">
+        <h3>${showVisual ? html`<a href="${A(`/affiche/${r.visual_id}`)}">${v?.film.title || 'Affiche'}</a>` : `Réservation ${resaLabel(r)}`}</h3>
+        <span class="badge ${RES_TONE[info.state]}">${RES_STATES[info.state]}</span></div>
+      <p class="meta-line">${showVisual ? html`<span class="mono">${v?.reference_code || ''}</span> · Réservation ${resaLabel(r)} · ` : ''}${f?.label || ''} · ${l?.name || ''} · ${plural(r.quantity, 'exemplaire')}</p>
+      <div class="who">${purged ? html`<span class="muted small">Données du client effacées</span>` : html`<span>${icon('users')} ${r.customer_name}</span>
+        ${active ? html`<span class="phone" data-phone>${maskPhone(r.customer_phone)} <button class="btn btn-ghost sm" style="height:28px;padding:0 8px" data-act="reveal" aria-label="Afficher le numéro">${icon('eye')}</button></span>` : ''}`}</div>
+      ${r.note && !purged ? html`<p class="small" style="margin-top:4px;color:var(--ink-2);font-style:italic">« ${r.note} »</p>` : ''}
+      <p class="meta-line">${active ? resaStateText(r, info) : `${RES_STATES[r.status]} le ${fmtDate(r.closed_at)}${r.closed_by_name ? ` par ${r.closed_by_name}` : ''}`}</p>
+      <p class="meta-line">Créée le ${fmtDate(r.created_at)}${r.created_by_name ? ` par ${r.created_by_name}` : ''}${r.notified_at ? ` · client prévenu le ${fmtDate(r.notified_at)}` : ''}${r.reminded_at ? ` · rappelé le ${fmtDate(r.reminded_at)}` : ''}</p>
+    </div>
+    ${active ? html`<div class="actions">
+      ${info.state === 'to_notify' ? html`<button class="btn btn-accent sm" data-act="notified">${icon('check')} Client prévenu</button>` : ''}
+      ${info.state === 'to_remind' ? html`<button class="btn btn-accent sm" data-act="reminded">${icon('check')} Rappel fait</button>` : ''}
+      ${sellable ? html`<button class="btn btn-primary sm" data-act="sell">${icon('checkCircle')} Retirée · vendre</button>` : ''}
+      ${sellable ? html`<button class="btn btn-secondary sm" data-act="extend">${icon('clock')} Prolonger</button>` : ''}
+      <button class="btn btn-ghost sm" data-act="edit">${icon('pen')} Modifier</button>
+      <button class="btn btn-danger-ghost sm" data-act="cancel">${icon('x')} ${info.state === 'overdue' ? 'Annuler et remettre en vente' : 'Annuler'}</button>
+    </div>` : !purged ? html`<div class="actions"><button class="btn btn-ghost sm" data-act="purge">${icon('trash')} Effacer les données du client maintenant</button></div>` : ''}
+  </article>`
+}
+
+async function resaRefresh(after) {
+  try { await loadAdminData() } catch { /* l'actualisation suivante corrigera */ }
+  ADM.movementVersion++
+  after?.()
+}
+
+/** Actions sur les cartes de réservation (délégation d'événements). */
+function bindResaActions(root, after) {
+  root.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-resa] [data-act]')
+    if (!b) return
+    const r = ADM.reservations.find((x) => x.id === b.closest('[data-resa]').dataset.resa)
+    if (!r) return
+    const act = b.dataset.act
+    const rpc = (name, args, msg) => busy(b, async () => {
+      try { await api.rpc(name, args); toast(msg); await resaRefresh(after) } catch (err) { toast(errMsg(err), 'error') }
+    })
+    if (act === 'reveal') {
+      const box = b.closest('[data-phone]')
+      setHTML(box, html`<a href="tel:${r.customer_phone}" class="link">${icon('phone')} ${formatPhone(r.customer_phone)}</a>`)
+      return
+    }
+    if (act === 'notified') return rpc('update_reservation', { p_id: r.id, p: { notified: true } }, 'Client prévenu : noté.')
+    if (act === 'reminded') return rpc('update_reservation', { p_id: r.id, p: { reminded: true } }, 'Rappel noté.')
+    if (act === 'sell') {
+      const f = ADM.formats.find((x) => x.id === r.format_id), l = ADM.locations.find((x) => x.id === r.location_id)
+      if (!(await confirmDialog({ title: 'Le client a retiré son affiche ?', confirmLabel: 'Enregistrer la vente',
+        message: html`<p>Vente de <b>${plural(r.quantity, 'exemplaire')}</b> (${f?.label} · ${l?.name}) pour la réservation ${resaLabel(r)}. L’historique indiquera seulement le numéro de réservation.</p>` }))) return
+      return rpc('complete_reservation', { p_id: r.id }, `Réservation ${resaLabel(r)} : vente enregistrée.`)
+    }
+    if (act === 'cancel') {
+      if (!(await confirmDialog({ title: 'Annuler la réservation ?', danger: true, confirmLabel: 'Annuler la réservation',
+        message: html`<p>${plural(r.quantity, 'exemplaire')} redevien${r.quantity > 1 ? 'nent' : 't'} disponible${r.quantity > 1 ? 's' : ''} à la vente. Le nom et le numéro du client seront effacés dans 30 jours.</p>` }))) return
+      return rpc('cancel_reservation', { p_id: r.id }, 'Réservation annulée.')
+    }
+    if (act === 'purge') {
+      if (!(await confirmDialog({ title: 'Effacer les données du client ?', danger: true, confirmLabel: 'Effacer',
+        message: html`<p>Le nom, le téléphone et la note de cette réservation terminée seront définitivement effacés (par exemple à la demande du client).</p>` }))) return
+      return rpc('purge_reservations', { p_id: r.id }, 'Données du client effacées.')
+    }
+    if (act === 'extend') {
+      const info = resaInfo(r)
+      const m = openModal({ title: 'Prolonger le délai de retrait', size: 'sm',
+        body: html`<div class="stack"><p class="muted small">Réservation ${resaLabel(r)} · retrait prévu avant le ${formatDay(info.due)}</p>
+          <div class="row between" style="padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--surface)"><b>Jours supplémentaires</b>${stepperHtml('days', 7, { min: 1, max: 60, label: 'Jours supplémentaires' })}</div>
+          <p class="hint">Le nouveau délai part de la date prévue (ou d’aujourd’hui si elle est dépassée).</p></div>`,
+        footer: html`<button class="btn btn-primary lg block" data-ok>${icon('clock')} Prolonger</button>` })
+      $('[data-ok]', m.el).onclick = (ev) => busy(ev.currentTarget, async () => {
+        const base = info.due && info.due > todayParis() ? info.due : todayParis()
+        try { await api.rpc('update_reservation', { p_id: r.id, p: { due_date: addDays(base, stepperValue(m.el, 'days')), reminded: false } }); m.close(); toast('Délai prolongé.'); await resaRefresh(after) } catch (err) { toast(errMsg(err), 'error') }
+      })
+      return
+    }
+    if (act === 'edit') {
+      const stock = findVisual(r.visual_id)?.stocks.find((s) => s.id === r.stock_id)
+      const maxQty = stock ? Math.max(r.quantity, stock.quantity - stockReserved(stock.id) + r.quantity) : r.quantity
+      const m = openModal({ title: `Modifier la réservation ${resaLabel(r)}`, size: 'sm',
+        body: html`<form class="stack" data-edit novalidate>
+          <div class="field"><label for="re-name">Nom du client</label><input class="input" id="re-name" name="name" maxlength="80" autocomplete="off" value="${r.customer_name || ''}"></div>
+          <div class="field"><label for="re-phone">Téléphone</label><input class="input" id="re-phone" name="phone" type="tel" inputmode="tel" autocomplete="off" value="${formatPhone(r.customer_phone)}"></div>
+          <div class="field"><span class="label">Quantité</span>${stepperHtml('qty', r.quantity, { min: 1, max: maxQty, label: 'Quantité réservée' })}</div>
+          <div class="field"><label for="re-note">Note (facultatif)</label><input class="input" id="re-note" name="note" maxlength="300" autocomplete="off" value="${r.note || ''}"></div></form>`,
+        footer: html`<button class="btn btn-primary lg block" data-ok>Enregistrer</button>` })
+      $('[data-ok]', m.el).onclick = (ev) => {
+        const f = $('[data-edit]', m.el)
+        const problem = resaFormProblem(f.name.value, f.phone.value)
+        if (problem) return toast(problem, 'error')
+        busy(ev.currentTarget, async () => {
+          try {
+            await api.rpc('update_reservation', { p_id: r.id, p: { customer_name: f.name.value.trim(), customer_phone: f.phone.value, note: f.note.value.trim(), quantity: stepperValue(m.el, 'qty') } })
+            m.close(); toast('Réservation modifiée.'); await resaRefresh(after)
+          } catch (err) { toast(errMsg(err), 'error') }
+        })
+      }
+    }
+  })
+}
+
+function resaFormProblem(name, phone) {
+  if (!String(name || '').trim()) return 'Indiquez le nom du client.'
+  const p = String(phone || '').replace(/[^0-9+]/g, '')
+  if (!/^\+?[0-9]{6,15}$/.test(p)) return 'Numéro de téléphone invalide.'
+  return null
+}
+
+/** Fenêtre « Réserver pour un client » depuis une affiche. */
+function reserveSheet(v, after) {
+  const rows = stockRows([v], ADM.formats, ADM.locations)
+    .map((r) => ({ ...r, free: r.stock.quantity - stockReserved(r.stock.id) }))
+    .filter((r) => r.free > 0)
+  if (!rows.length) return toast('Aucun exemplaire libre à réserver pour cette affiche.', 'error')
+  const upcoming = isUpcoming(v)
+  const m = openModal({ title: 'Réserver pour un client',
+    body: html`<form class="stack" data-reserve novalidate>
+      <p class="muted small">${v.film.title} · <span class="mono">${v.reference_code}</span>${v.label ? ` · ${v.label}` : ''}</p>
+      ${upcoming ? html`<div class="alert warn">${icon('calendar')} En vente à partir du <b>${formatDay(v.available_from)}</b> : le délai de retrait de ${plural(ADM.settings.pickup_days ?? 10, 'jour')} démarrera ce jour-là.</div>`
+        : html`<p class="hint">Le client aura ${plural(ADM.settings.pickup_days ?? 10, 'jour')} pour venir la chercher.</p>`}
+      <div class="field"><span class="label">Format et emplacement</span>
+        <div class="stack tight" role="radiogroup" aria-label="Format et emplacement">${rows.map((r, i) => html`<label class="check" style="padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)">
+          <input type="radio" name="row" value="${r.stock.id}" ${attr(i === 0, 'checked')}> <span class="grow"><b>${r.format.label}</b> · ${r.location.name}</span><span class="small muted">${plural(r.free, 'libre')}</span></label>`)}</div></div>
+      <div class="field"><span class="label">Quantité</span>${stepperHtml('qty', 1, { min: 1, max: rows[0].free, label: 'Quantité à réserver' })}</div>
+      <div class="field"><label for="rs-name">Nom du client</label><input class="input" id="rs-name" name="name" maxlength="80" autocomplete="off" autocapitalize="words" placeholder="Prénom Nom"></div>
+      <div class="field"><label for="rs-phone">Téléphone</label><input class="input" id="rs-phone" name="phone" type="tel" inputmode="tel" autocomplete="off" placeholder="06 12 34 56 78"></div>
+      <div class="field"><label for="rs-note">Note (facultatif)</label><input class="input" id="rs-note" name="note" maxlength="300" autocomplete="off" placeholder="Ex. préfère être appelé après 18 h"></div>
+      <p class="hint">${icon('lock')} Nom et numéro visibles uniquement par les administrateurs, effacés 30 jours après le retrait ou l’annulation.</p></form>`,
+    footer: html`<button class="btn btn-primary lg block" data-ok>${icon('bookmark')} Enregistrer la réservation</button>` })
+  const f = $('[data-reserve]', m.el)
+  f.addEventListener('change', (e) => {
+    if (e.target.name !== 'row') return
+    const r = rows.find((x) => x.stock.id === e.target.value)
+    const st = $('[data-stepper="qty"]', m.el)
+    st.dataset.max = String(r.free); st.querySelector('input').max = String(r.free)
+    if (stepperValue(m.el, 'qty') > r.free) st.querySelector('input').value = String(r.free)
+  })
+  $('[data-ok]', m.el).onclick = (ev) => {
+    const problem = resaFormProblem(f.name.value, f.phone.value)
+    if (problem) return toast(problem, 'error')
+    const row = rows.find((x) => x.stock.id === f.row.value)
+    busy(ev.currentTarget, async () => {
+      try {
+        const out = await api.rpc('create_reservation', { p_visual_id: v.id, p_format_id: row.format.id, p_location_id: row.location.id, p_quantity: stepperValue(m.el, 'qty'),
+          p_name: f.name.value.trim(), p_phone: f.phone.value, p_note: f.note.value.trim() || null })
+        m.close()
+        toast(`Réservation n° ${out.number} enregistrée.`)
+        await resaRefresh(after)
+      } catch (err) { toast(errMsg(err), 'error') }
+    })
+  }
+}
+
+/** « Nouvelle réservation » : choisir l'affiche, puis le client. */
+function newReservation(after) {
+  const m = openModal({ title: 'Nouvelle réservation',
+    body: html`<div class="stack"><div class="search">${icon('search')}<input class="input" type="search" data-q placeholder="Titre du film ou référence (AF-0012)" aria-label="Rechercher l’affiche à réserver" autocomplete="off" data-autofocus></div>
+      <div data-list class="stack tight"></div></div>` })
+  const input = $('[data-q]', m.el)
+  const draw = () => {
+    const q = input.value.trim()
+    const list = filterAdminVisuals(ADM.visuals, { query: q, status: 'active' }, ADM.formats, ADM.locations)
+      .filter((v) => v.stocks.some((s) => s.quantity - stockReserved(s.id) > 0)).slice(0, 20)
+    setHTML($('[data-list]', m.el), list.length ? list.map((v) => {
+      const free = v.stocks.reduce((n, s) => n + Math.max(s.quantity - stockReserved(s.id), 0), 0)
+      return html`<button class="card list-link" style="text-align:left;width:100%" data-pick="${v.id}">
+        <span style="width:44px;flex-shrink:0">${posterHtml(img.visual(v, 'thumb'), '')}</span>
+        <span class="grow"><b>${v.film.title}</b><br><span class="muted small"><span class="mono">${v.reference_code}</span> · ${plural(free, 'libre')}${isUpcoming(v) ? ` · en vente le ${formatDay(v.available_from, { day: 'numeric', month: 'short' })}` : ''}</span></span>${icon('chevR')}</button>`
+    }) : html`<p class="muted small">${q ? 'Aucune affiche avec des exemplaires libres ne correspond.' : 'Aucune affiche avec des exemplaires libres.'}</p>`)
+  }
+  input.addEventListener('input', draw)
+  m.el.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-pick]')
+    if (!b) return
+    m.close()
+    reserveSheet(findVisual(b.dataset.pick), after)
+  })
+  draw()
+}
+
+ADMIN_PAGES.reservations = async (page) => {
+  const params = qs()
+  let tab = params.get('vue') === 'terminees' ? 'closed' : 'active'
+  setHTML(page, html`${pageHead('Réservations', 'Affiches mises de côté pour des clients, à retirer en caisse.', { actions: html`<button class="btn btn-primary" data-new>${icon('plus')} Nouvelle réservation</button>` })}
+    <div class="row wrap" style="gap:10px;margin-bottom:16px">
+      <div class="seg" role="radiogroup" data-tabs></div>
+      <div class="search grow" style="min-width:220px">${icon('search')}<input class="input" type="search" data-q placeholder="Nom, téléphone, n° de réservation, film…" aria-label="Rechercher une réservation" autocomplete="off"></div></div>
+    <div data-list></div>`)
+  const input = $('[data-q]', page)
+  const draw = () => {
+    const today = todayParis()
+    const q = input.value.trim()
+    const active = ADM.reservations.filter((r) => r.status === 'active')
+    const closed = ADM.reservations.filter((r) => r.status !== 'active')
+    setHTML($('[data-tabs]', page), [['active', `En cours (${active.length})`], ['closed', `Terminées (${closed.length})`]].map(([k, l]) =>
+      html`<button type="button" role="radio" aria-checked="${String(tab === k)}" data-tab="${k}">${l}</button>`))
+    let list = (tab === 'active' ? active : closed).filter((r) => reservationMatches(r, findVisual(r.visual_id), q))
+    if (tab === 'active') {
+      const withInfo = list.map((r) => ({ r, info: reservationInfo(r, findVisual(r.visual_id), ADM.settings, today) }))
+      withInfo.sort((a, b) => RES_STATE_ORDER.indexOf(a.info.state) - RES_STATE_ORDER.indexOf(b.info.state) || String(a.info.due || '9').localeCompare(String(b.info.due || '9')) || a.r.number - b.r.number)
+      list = withInfo.map((x) => x.r)
+    }
+    setHTML($('[data-list]', page), list.length ? html`<div class="resa-list">${list.map((r) => resaCard(r))}</div>`
+      : html`<div class="empty"><div class="ico">${icon('bookmark')}</div><h3>${q ? 'Aucune réservation trouvée' : tab === 'active' ? 'Aucune réservation en cours' : 'Aucune réservation terminée'}</h3>
+        <p>${tab === 'active' ? 'Quand un client veut une affiche, enregistrez-la ici au lieu du carnet papier.' : 'Les réservations retirées ou annulées apparaissent ici (données client effacées après 30 jours).'}</p></div>`)
+  }
+  $('[data-tabs]', page).addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; draw() } })
+  input.addEventListener('input', draw)
+  $('[data-new]', page).onclick = () => newReservation(draw)
+  bindResaActions(page, draw)
+  ADM.refreshView = draw
+  draw()
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -2843,6 +3426,8 @@ ADMIN_PAGES.add = async (page) => {
         <div class="card pad stack">
           <div class="field"><label for="f-label">Nom du visuel</label><input class="input" id="f-label" name="label" value="${label}"><span class="hint">Pour distinguer les affiches d’un même film (ex. « Affiche teaser », « Affiche personnage »).</span></div>
           ${switchHtml('published', true, 'Publiée dans la vitrine', 'Visible par les clients tant qu’il reste des exemplaires. Décochez pour l’enregistrer en « Masquée ».')}
+          <div class="field"><label for="f-from">En vente à partir du (facultatif)</label><input class="input" id="f-from" name="available_from" type="date" min="${todayParis()}">
+            <span class="hint">Pour une affiche reçue mais pas encore vendable (film encore à l’affiche). La vitrine indique « Bientôt » et elle peut déjà être réservée pour des clients.</span></div>
           <details><summary class="link" style="cursor:pointer;text-decoration:none">${icon('chevD')} Prix personnalisé (facultatif)</summary>
             <div class="grid2" style="margin-top:12px">${fmts.map((f) => html`<div class="field"><label for="pr-${f.id}">${f.label}</label>
               <div class="input-wrap"><input class="input" id="pr-${f.id}" data-price="${f.id}" inputmode="decimal" placeholder="${centsToInput(f.default_price_cents) || '0,00'}"><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--ink-3)">€</span></div>
@@ -2908,6 +3493,7 @@ ADMIN_PAGES.add = async (page) => {
           } else visual = { source: 'tmdb', tmdb_file_path: S.image.poster.file_path, tmdb_language: S.image.poster.iso_639_1 }
           visual.label = f.label.value.trim()
           visual.status = f.published.checked ? 'published' : 'hidden'
+          if (f.available_from.value) visual.available_from = f.available_from.value
           const lf = localFilm()
           const t = S.film.tmdb
           const film = lf ? { id: lf.id, title: lf.title }
@@ -2939,7 +3525,7 @@ ADMIN_PAGES.add = async (page) => {
   // ── Terminé ─────────────────────────────────────────────────────────
   function stepDone() {
     const v = findVisual(S.createdId)
-    const visible = v && isPubliclyVisible(v, activeFormatIds())
+    const visible = v && isPubliclyVisible(v, activeFormatIds(), ADM.reservations)
     frame(html`<div class="card pad stack" style="max-width:560px;margin:0 auto;align-items:center;text-align:center">
       <div style="width:140px;position:relative">${posterHtml(v ? img.visual(v, 'card') : null, '', { cls: 'shadow' })}
         <span style="position:absolute;right:-10px;bottom:-10px;width:44px;height:44px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;border:4px solid #fff">${icon('check')}</span></div>
@@ -3200,6 +3786,13 @@ ADMIN_PAGES.settings = async (page) => {
       ${switchHtml('show_recent', s.show_recent, 'Section « Dernières affiches ajoutées »')}</div>`)}
     ${section('Formats et tarifs', 'Prix par défaut en euros, appliqués aux affiches sans prix personnalisé.', html`<div data-formats class="stack tight"></div>
       <form class="row wrap" data-new-format><input class="input grow" style="min-width:200px" name="label" placeholder="Nouveau format (ex. Format 120 × 160)" aria-label="Nom du nouveau format"><button class="btn btn-secondary" type="submit">${icon('plus')} Ajouter un format</button></form>`)}
+    ${section('Réservations clients', 'Délai laissé au client pour venir chercher son affiche, à partir du jour où elle est en vente.', html`<form class="card pad stack" data-resa-settings novalidate>
+      <div class="grid2">
+        <div class="field"><label for="st-pickup">Délai de retrait (jours)</label><input class="input" id="st-pickup" name="pickup_days" type="number" inputmode="numeric" min="1" max="90" value="${s.pickup_days ?? 10}"></div>
+        <div class="field"><label for="st-remind">Rappel avant la fin du délai (jours)</label><input class="input" id="st-remind" name="reminder_days" type="number" inputmode="numeric" min="0" max="30" value="${s.reminder_days ?? 3}"><p class="hint">0 = pas de rappel.</p></div>
+      </div>
+      <p class="hint">Les noms et numéros des clients sont effacés automatiquement 30 jours après la vente ou l’annulation de la réservation.</p>
+      <button class="btn btn-primary" style="align-self:flex-start" type="submit">Enregistrer</button></form>`)}
     ${section('Emplacements', 'Zones de rangement physiques (privées).', html`<a class="card list-link" href="${A('/emplacements')}"><span class="ico">${icon('pin')}</span><span class="grow"><b>Gérer les emplacements</b><br><span class="muted small">${plural(ADM.locations.length, 'emplacement')}</span></span>${icon('chevR')}</a>`)}
     ${section('Inventaire PDF', 'Options proposées par défaut.', html`<div class="card pad stack">${switchHtml('pdf_include_thumbnails', s.pdf_include_thumbnails, 'Miniatures des affiches')}${switchHtml('pdf_include_prices', s.pdf_include_prices, 'Colonne des prix')}</div>`)}
     ${section('QR code de la vitrine', 'À imprimer et afficher dans le hall du cinéma.', html`<div class="card pad qr-box"><div class="qr" data-qr><span class="spinner"></span></div>
@@ -3213,6 +3806,7 @@ ADMIN_PAGES.settings = async (page) => {
         ${passwordField('pw', 'Nouveau mot de passe', { autocomplete: 'new-password', hint: `${MIN_PASSWORD} caractères minimum` })}
         ${passwordField('pw2', 'Confirmer le nouveau mot de passe', { autocomplete: 'new-password' })}
         <button class="btn btn-primary" style="align-self:flex-start" type="submit">${icon('key')} Changer le mot de passe</button></form>
+      <div class="card pad stack" data-mfa-card><div class="boot" style="min-height:60px"><span class="spinner"></span></div></div>
       <button class="btn btn-danger-ghost" style="align-self:flex-start" data-logout>${icon('logout')} Se déconnecter</button>`)}
     ${owner ? html`<div data-reset-zone></div>` : ''}
     </div>`)
@@ -3344,15 +3938,73 @@ ADMIN_PAGES.settings = async (page) => {
     const problem = passwordProblem(f.pw.value, f.pw2.value)
     if (problem) return toast(problem, 'error')
     busy($('[type=submit]', f), async () => {
-      // Protection : le mot de passe actuel est revérifié avant toute modification.
-      const { error: e1 } = await sb.auth.signInWithPassword({ email: ADM.profile.email, password: f.current.value })
-      if (e1) return toast('Mot de passe actuel incorrect.', 'error')
+      // Protection : le mot de passe actuel est revérifié par le serveur avant toute modification
+      // (sans rouvrir de session : la double authentification en cours est conservée).
+      try { await api.server('/api/account', { method: 'POST', body: { action: 'check-password', password: f.current.value } }) } catch (err) { return toast(errMsg(err), 'error') }
       const { error } = await sb.auth.updateUser({ password: f.pw.value })
       if (error) return toast(pwError(error), 'error')
       f.reset(); toast('Mot de passe modifié')
     })
   }
   $('[data-logout]', page).onclick = () => signOut()
+
+  // Réservations : délai de retrait et rappel (tout administrateur)
+  $('[data-resa-settings]', page).onsubmit = (e) => {
+    e.preventDefault()
+    const f = e.target
+    const pickup = Math.round(Number(f.pickup_days.value)), remind = Math.round(Number(f.reminder_days.value))
+    if (!(pickup >= 1 && pickup <= 90)) return toast('Délai de retrait : entre 1 et 90 jours.', 'error')
+    if (!(remind >= 0 && remind <= 30)) return toast('Rappel : entre 0 et 30 jours.', 'error')
+    busy($('[type=submit]', f), async () => {
+      try { await api.rpc('set_reservation_settings', { p_pickup_days: pickup, p_reminder_days: remind }); Object.assign(ADM.settings, { pickup_days: pickup, reminder_days: remind }); toast('Réglages des réservations enregistrés') } catch (err) { toast(errMsg(err), 'error') }
+    })
+  }
+
+  // Double authentification
+  mountMfaCard($('[data-mfa-card]', page), owner)
+}
+
+async function mountMfaCard(box, owner) {
+  let factors = []
+  try { factors = await verifiedTotp() } catch (e) { setHTML(box, html`<div class="alert error">${errMsg(e)}</div>`); return }
+  if (!box.isConnected) return
+  const required = ADM.settings.require_mfa !== false
+  const on = factors.length > 0
+  setHTML(box, html`<div class="row" style="justify-content:space-between;gap:10px;align-items:flex-start">
+      <div><p style="font-weight:800">${icon('shield')} Double authentification</p>
+        <p class="muted small" style="margin-top:4px">${on ? 'Un code à 6 chiffres de votre téléphone est demandé à chaque nouvelle connexion (nouvel appareil, après déconnexion).' : 'Non activée sur votre compte.'}</p></div>
+      <span class="badge ${on ? 'ok' : 'warn'}">${on ? 'Activée' : 'Inactive'}</span></div>
+    <div class="row wrap" style="gap:8px">
+      ${on ? html`<button class="btn btn-secondary sm" data-mfa-change>${icon('phone')} Changer de téléphone</button>` : html`<button class="btn btn-primary sm" data-mfa-add>${icon('shield')} Activer</button>`}
+      ${on && !required ? html`<button class="btn btn-ghost sm" data-mfa-off>Désactiver</button>` : ''}
+    </div>
+    ${owner ? html`<div style="border-top:1px solid var(--line);padding-top:14px">${switchHtml('require_mfa', required, 'Obligatoire pour tous les comptes', 'Recommandé : les administrateurs ont accès aux coordonnées des clients. Sans code validé, la base de données refuse tout accès.')}</div>` : ''}`)
+  const enrollModal = (title, replaceOthers) => {
+    const m = openModal({ title, size: 'sm', body: html`<div data-box></div>` })
+    mountMfaEnroll($('[data-box]', m.el), { replaceOthers, onDone: async () => { m.close(); toast(replaceOthers ? 'Nouveau téléphone enregistré.' : 'Double authentification activée.'); mountMfaCard(box, owner) } })
+  }
+  $('[data-mfa-change]', box)?.addEventListener('click', () => enrollModal('Changer de téléphone', true))
+  $('[data-mfa-add]', box)?.addEventListener('click', () => enrollModal('Activer la double authentification', false))
+  $('[data-mfa-off]', box)?.addEventListener('click', async () => {
+    if (!(await confirmDialog({ title: 'Désactiver la double authentification ?', danger: true, confirmLabel: 'Désactiver', message: html`<p>Votre compte ne sera plus protégé que par le mot de passe.</p>` }))) return
+    for (const f of factors) await sb.auth.mfa.unenroll({ factorId: f.id }).catch(() => {})
+    toast('Double authentification désactivée.')
+    mountMfaCard(box, owner)
+  })
+  const sw = $('input[name="require_mfa"]', box)
+  if (sw) sw.addEventListener('change', async () => {
+    const want = sw.checked
+    if (!want && !(await confirmDialog({ title: 'Rendre la double authentification facultative ?', danger: true, confirmLabel: 'Rendre facultative',
+      message: html`<p>Chaque compte pourra se connecter avec son seul mot de passe s’il n’a pas activé la double authentification. Les coordonnées des clients seront moins protégées.</p>` }))) { sw.checked = true; return }
+    if (want && !on && !(await confirmDialog({ title: 'Rendre obligatoire ?', confirmLabel: 'Rendre obligatoire',
+      message: html`<p>Votre propre compte n’a pas encore de double authentification : l’application vous demandera de l’activer immédiatement.</p>` }))) { sw.checked = false; return }
+    try {
+      await api.update('app_settings', { id: true }, { require_mfa: want })
+      ADM.settings.require_mfa = want
+      toast(want ? 'Double authentification obligatoire.' : 'Double authentification facultative.')
+      if (want && !on) { ADM.profile = null; ADM.loaded = false; render() } else mountMfaCard(box, owner)
+    } catch (err) { sw.checked = !want; toast(errMsg(err), 'error') }
+  })
 }
 
 /* Remise à zéro (période de test) — administrateur principal + mot de passe obligatoires.
@@ -3362,16 +4014,24 @@ const RESET_SCOPES = {
     removes: ['Tout l’historique des mouvements (ventes, réservations, corrections, déplacements)'],
     keeps: ['Les affiches et leurs quantités en stock', 'Les réglages, formats, prix, emplacements et administrateurs'] },
   stock: { title: 'Vider le stock', btn: 'Vider le stock', icon: 'box',
-    removes: ['Toutes les quantités, remises à 0 dans chaque emplacement', 'Tout l’historique des mouvements'],
+    removes: ['Toutes les quantités, remises à 0 dans chaque emplacement', 'Toutes les réservations clients', 'Tout l’historique des mouvements'],
     keeps: ['Les fiches des affiches (elles apparaîtront épuisées)', 'Les réglages, formats, prix, emplacements et administrateurs'] },
   all: { title: 'Tout réinitialiser', btn: 'Tout réinitialiser', icon: 'trash',
-    removes: ['Tous les films et toutes les affiches (et leurs photos)', 'Tous les stocks et prix personnalisés', 'Tout l’historique ; les références repartent à AF-0001'],
+    removes: ['Tous les films et toutes les affiches (et leurs photos)', 'Tous les stocks, prix personnalisés et réservations clients', 'Tout l’historique ; les références repartent à AF-0001'],
     keeps: ['Les réglages, le logo, les formats et tarifs par défaut', 'Les emplacements', 'Les comptes administrateurs'] },
 }
 async function mountResetZone(box, section) {
-  let info
-  try { info = await api.server('/api/maintenance') } catch { return }
-  if (!info?.enabled || !box.isConnected) return
+  let info, problem = null
+  try { info = await api.server('/api/maintenance') } catch (err) { problem = errMsg(err) }
+  if (!box.isConnected) return
+  if (!info?.enabled) {
+    // Explique pourquoi la zone n'apparaît pas (utile pendant l'installation)
+    const why = problem && /404|introuvable|Erreur serveur/i.test(problem)
+      ? 'la fonction serveur « api/maintenance.js » est introuvable sur le site (vérifiez qu’elle est bien dans le dossier api de GitHub, sans « .txt »).'
+      : problem ? problem : 'désactivée (le script supabase/03_maintenance.sql n’est pas installé ou a été retiré).'
+    setHTML(box, html`<p class="hint" style="margin-top:22px">${icon('info')} Remise à zéro : ${why}</p>`)
+    return
+  }
   setHTML(box, section('Remise à zéro (période de test)', 'Pour repartir de zéro à la fin des essais. Le mot de passe du compte principal est demandé à chaque fois.', html`
     <div class="card pad stack" style="border-color:var(--danger-line)">
       ${Object.entries(RESET_SCOPES).map(([k, r]) => html`<div class="row wrap" style="justify-content:space-between;gap:12px">
