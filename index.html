@@ -3029,9 +3029,11 @@ function bindResaActions(root, after) {
     if (act === 'edit') {
       const stock = findVisual(r.visual_id)?.stocks.find((s) => s.id === r.stock_id)
       const maxQty = stock ? Math.max(r.quantity, stock.quantity - stockReserved(stock.id) + r.quantity) : r.quantity
+      const cur = splitCivility(r.customer_name)
       const m = openModal({ title: `Modifier la réservation ${resaLabel(r)}`, size: 'sm',
         body: html`<form class="stack" data-edit novalidate>
-          <div class="field"><label for="re-name">Nom du client</label><input class="input" id="re-name" name="name" maxlength="80" autocomplete="off" value="${r.customer_name || ''}"></div>
+          ${civilityField(cur.civ)}
+          <div class="field"><label for="re-name">Nom du client</label><input class="input" id="re-name" name="name" maxlength="75" autocomplete="off" value="${cur.name}"></div>
           <div class="field"><label for="re-phone">Téléphone</label><input class="input" id="re-phone" name="phone" type="tel" inputmode="tel" autocomplete="off" value="${formatPhone(r.customer_phone)}"></div>
           <div class="field"><span class="label">Quantité</span>${stepperHtml('qty', r.quantity, { min: 1, max: maxQty, label: 'Quantité réservée' })}</div>
           <div class="field"><label for="re-note">Note (facultatif)</label><input class="input" id="re-note" name="note" maxlength="300" autocomplete="off" value="${r.note || ''}"></div></form>`,
@@ -3042,7 +3044,7 @@ function bindResaActions(root, after) {
         if (problem) return toast(problem, 'error')
         busy(ev.currentTarget, async () => {
           try {
-            await api.rpc('update_reservation', { p_id: r.id, p: { customer_name: f.name.value.trim(), customer_phone: f.phone.value, note: f.note.value.trim(), quantity: stepperValue(m.el, 'qty') } })
+            await api.rpc('update_reservation', { p_id: r.id, p: { customer_name: withCivility(segValue(m.el, 'civ'), f.name.value), customer_phone: f.phone.value, note: f.note.value.trim(), quantity: stepperValue(m.el, 'qty') } })
             m.close(); toast('Réservation modifiée.'); await resaRefresh(after)
           } catch (err) { toast(errMsg(err), 'error') }
         })
@@ -3050,6 +3052,15 @@ function bindResaActions(root, after) {
     }
   })
 }
+
+/** Civilité facultative (M. / Mme), enregistrée devant le nom : effacée avec lui après 30 jours. */
+const CIVILITIES = [['', 'Aucune'], ['M.', 'M.'], ['Mme', 'Mme']]
+const civilityField = (value = '') => html`<div class="field"><span class="label">Civilité (facultatif)</span>${segHtml('civ', value, CIVILITIES)}</div>`
+function splitCivility(full) {
+  const m = /^(M\.|Mme)\s+(.+)$/.exec(String(full || ''))
+  return m ? { civ: m[1], name: m[2] } : { civ: '', name: String(full || '') }
+}
+const withCivility = (civ, name) => (civ ? `${civ} ${name.trim()}` : name.trim())
 
 function resaFormProblem(name, phone) {
   if (!String(name || '').trim()) return 'Indiquez le nom du client.'
@@ -3074,7 +3085,8 @@ function reserveSheet(v, after) {
         <div class="stack tight" role="radiogroup" aria-label="Format et emplacement">${rows.map((r, i) => html`<label class="check" style="padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)">
           <input type="radio" name="row" value="${r.stock.id}" ${attr(i === 0, 'checked')}> <span class="grow"><b>${r.format.label}</b> · ${r.location.name}</span><span class="small muted">${plural(r.free, 'libre')}</span></label>`)}</div></div>
       <div class="field"><span class="label">Quantité</span>${stepperHtml('qty', 1, { min: 1, max: rows[0].free, label: 'Quantité à réserver' })}</div>
-      <div class="field"><label for="rs-name">Nom du client</label><input class="input" id="rs-name" name="name" maxlength="80" autocomplete="off" autocapitalize="words" placeholder="Prénom Nom"></div>
+      ${civilityField()}
+      <div class="field"><label for="rs-name">Nom du client</label><input class="input" id="rs-name" name="name" maxlength="75" autocomplete="off" autocapitalize="words" placeholder="Prénom Nom"></div>
       <div class="field"><label for="rs-phone">Téléphone</label><input class="input" id="rs-phone" name="phone" type="tel" inputmode="tel" autocomplete="off" placeholder="06 12 34 56 78"></div>
       <div class="field"><label for="rs-note">Note (facultatif)</label><input class="input" id="rs-note" name="note" maxlength="300" autocomplete="off" placeholder="Ex. préfère être appelé après 18 h"></div>
       <p class="hint">${icon('lock')} Nom et numéro visibles uniquement par les administrateurs, effacés 30 jours après le retrait ou l’annulation.</p></form>`,
@@ -3094,7 +3106,7 @@ function reserveSheet(v, after) {
     busy(ev.currentTarget, async () => {
       try {
         const out = await api.rpc('create_reservation', { p_visual_id: v.id, p_format_id: row.format.id, p_location_id: row.location.id, p_quantity: stepperValue(m.el, 'qty'),
-          p_name: f.name.value.trim(), p_phone: f.phone.value, p_note: f.note.value.trim() || null })
+          p_name: withCivility(segValue(m.el, 'civ'), f.name.value), p_phone: f.phone.value, p_note: f.note.value.trim() || null })
         m.close()
         toast(`Réservation n° ${out.number} enregistrée.`)
         await resaRefresh(after)
