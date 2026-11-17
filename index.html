@@ -3214,7 +3214,9 @@ ADMIN_PAGES.settings = async (page) => {
         ${passwordField('pw2', 'Confirmer le nouveau mot de passe', { autocomplete: 'new-password' })}
         <button class="btn btn-primary" style="align-self:flex-start" type="submit">${icon('key')} Changer le mot de passe</button></form>
       <button class="btn btn-danger-ghost" style="align-self:flex-start" data-logout>${icon('logout')} Se déconnecter</button>`)}
+    ${owner ? html`<div data-reset-zone></div>` : ''}
     </div>`)
+  if (owner) mountResetZone($('[data-reset-zone]', page), section)
 
   const saveSettings = async (patch, msg = 'Réglages enregistrés') => {
     try { await api.update('app_settings', { id: true }, patch); ADM.settings = await api.settings(); applyBrand(ADM.settings); toast(msg); return true }
@@ -3351,6 +3353,73 @@ ADMIN_PAGES.settings = async (page) => {
     })
   }
   $('[data-logout]', page).onclick = () => signOut()
+}
+
+/* Remise à zéro (période de test) — administrateur principal + mot de passe obligatoires.
+   Disparaît dès que supabase/04_retirer_remise_a_zero.sql a été exécuté. */
+const RESET_SCOPES = {
+  history: { title: 'Effacer l’historique', btn: 'Effacer l’historique', icon: 'history',
+    removes: ['Tout l’historique des mouvements (ventes, réservations, corrections, déplacements)'],
+    keeps: ['Les affiches et leurs quantités en stock', 'Les réglages, formats, prix, emplacements et administrateurs'] },
+  stock: { title: 'Vider le stock', btn: 'Vider le stock', icon: 'box',
+    removes: ['Toutes les quantités, remises à 0 dans chaque emplacement', 'Tout l’historique des mouvements'],
+    keeps: ['Les fiches des affiches (elles apparaîtront épuisées)', 'Les réglages, formats, prix, emplacements et administrateurs'] },
+  all: { title: 'Tout réinitialiser', btn: 'Tout réinitialiser', icon: 'trash',
+    removes: ['Tous les films et toutes les affiches (et leurs photos)', 'Tous les stocks et prix personnalisés', 'Tout l’historique ; les références repartent à AF-0001'],
+    keeps: ['Les réglages, le logo, les formats et tarifs par défaut', 'Les emplacements', 'Les comptes administrateurs'] },
+}
+async function mountResetZone(box, section) {
+  let info
+  try { info = await api.server('/api/maintenance') } catch { return }
+  if (!info?.enabled || !box.isConnected) return
+  setHTML(box, section('Remise à zéro (période de test)', 'Pour repartir de zéro à la fin des essais. Le mot de passe du compte principal est demandé à chaque fois.', html`
+    <div class="card pad stack" style="border-color:var(--danger-line)">
+      ${Object.entries(RESET_SCOPES).map(([k, r]) => html`<div class="row wrap" style="justify-content:space-between;gap:12px">
+        <div style="flex:1;min-width:200px"><b>${r.title}</b><p class="muted small">${r.removes.join(' · ')}</p></div>
+        <button class="btn btn-danger-ghost sm" data-reset="${k}">${icon(r.icon)} ${r.btn}</button></div>`)}
+      <p class="hint">À la livraison, cette zone pourra être retirée définitivement (voir le guide).</p>
+    </div>`))
+  box.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-reset]')
+    if (b) openResetDialog(b.dataset.reset, info.confirmWord || 'EFFACER')
+  })
+}
+function openResetDialog(scope, word) {
+  const r = RESET_SCOPES[scope]
+  const m = openModal({
+    title: r.title, size: 'sm',
+    body: html`<form class="stack" data-reset-form novalidate>
+      <div class="alert error"><b>Action définitive, sans retour possible.</b></div>
+      <div><p class="label">Sera effacé</p><ul class="small" style="margin:6px 0 0;padding-left:18px">${r.removes.map((x) => html`<li>${x}</li>`)}</ul></div>
+      <div><p class="label">Sera conservé</p><ul class="small muted" style="margin:6px 0 0;padding-left:18px">${r.keeps.map((x) => html`<li>${x}</li>`)}</ul></div>
+      ${passwordField('password', 'Mot de passe du compte principal')}
+      <div class="field"><label for="reset-confirm">Tapez <b class="mono">${word}</b> pour confirmer</label>
+        <input class="input mono" id="reset-confirm" name="confirm" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
+      <div class="row"><button type="button" class="btn btn-secondary block" data-close>Annuler</button>
+        <button type="submit" class="btn btn-danger block">${icon(r.icon)} ${r.btn}</button></div>
+    </form>`,
+  })
+  const f = $('[data-reset-form]', m.el)
+  f.onsubmit = (e) => {
+    e.preventDefault()
+    if (!f.password.value) return toast('Saisissez le mot de passe du compte principal.', 'error')
+    if (f.confirm.value.trim().toUpperCase() !== word) return toast(`Tapez ${word} pour confirmer.`, 'error')
+    busy($('[type=submit]', f), async () => {
+      try {
+        const out = await api.server('/api/maintenance', { method: 'POST', body: { scope, password: f.password.value, confirm: f.confirm.value } })
+        m.close()
+        const parts = scope === 'history' ? [plural(out.movements, 'mouvement effacé', 'mouvements effacés')]
+          : scope === 'stock' ? [plural(out.stocks, 'stock remis à 0', 'stocks remis à 0'), plural(out.movements, 'mouvement effacé', 'mouvements effacés')]
+          : [plural(out.visuals, 'affiche supprimée', 'affiches supprimées'), plural(out.films, 'film supprimé', 'films supprimés')]
+        toast(`${r.title} : terminé (${parts.join(', ')}).`)
+        ADM.movementVersion++
+        await reloadAdmin({ quiet: false })
+      } catch (err) {
+        f.password.value = ''
+        toast(errMsg(err), 'error')
+      }
+    })
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
