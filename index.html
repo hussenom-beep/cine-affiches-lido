@@ -390,6 +390,8 @@ body.pub .dialog { background: var(--bg); box-shadow: 0 0 0 1px var(--line), var
 .menu-prices ul { list-style: none; margin: 0; padding: 0; }
 .menu-prices li { display: flex; align-items: baseline; gap: 10px; padding: 9px 0; font-size: 15.5px; font-weight: 600; }
 .menu-prices li .dots { flex: 1; border-bottom: 1.5px dotted var(--ink-5); transform: translateY(-4px); }
+.avail-word { font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-400); }
+.avail-word.soon { color: #f5a26b; }
 .menu-prices .price { font-family: var(--display); font-weight: 600; font-size: 21px; color: var(--gold-400); }
 .ref-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid rgb(232 119 46 / .45); background: rgb(232 119 46 / .07); }
 .ref-card .code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 24px; letter-spacing: .04em; color: var(--accent); }
@@ -856,23 +858,25 @@ export function buildInventoryRows(visuals, formats, locations, opts) {
 }
 
 /* ── Catalogue papier et classeur ─────────────────────────────────────── */
-/** Affiches qui ont leur page dans le catalogue papier : publiées, avec au moins un exemplaire en stock. */
-export function inCatalogue(v) { return v.status === 'published' && v.stocks.some((s) => s.quantity > 0) }
-export function catalogueVisuals(visuals) {
-  return visuals.filter(inCatalogue).sort((a, b) => COLLATOR.compare(a.film.title, b.film.title) || (yearOf(a.film) || 0) - (yearOf(b.film) || 0) || a.reference_code.localeCompare(b.reference_code))
+/** Exemplaires libres (non réservés) d'une ligne de stock. */
+const freeQty = (s, reservations) => s.quantity - reservedQty(reservations, s.id)
+/** Affiches qui ont leur page dans le catalogue papier : publiées, avec au moins un exemplaire LIBRE (non réservé). */
+export function inCatalogue(v, reservations = []) { return v.status === 'published' && v.stocks.some((s) => freeQty(s, reservations) > 0) }
+export function catalogueVisuals(visuals, reservations = []) {
+  return visuals.filter((v) => inCatalogue(v, reservations)).sort((a, b) => COLLATOR.compare(a.film.title, b.film.title) || (yearOf(a.film) || 0) - (yearOf(b.film) || 0) || a.reference_code.localeCompare(b.reference_code))
 }
-/** Formats à imprimer sur la page d'une affiche (ceux qui ont du stock), avec leur prix. */
-export function catalogueFormats(v, formats) {
-  return formats.filter((f) => f.is_active !== false && v.stocks.some((s) => s.format_id === f.id && s.quantity > 0))
+/** Formats à imprimer sur la page d'une affiche (ceux qui ont un exemplaire libre), avec leur prix. */
+export function catalogueFormats(v, formats, reservations = []) {
+  return formats.filter((f) => f.is_active !== false && v.stocks.some((s) => s.format_id === f.id && freeQty(s, reservations) > 0))
     .sort((a, b) => a.sort_order - b.sort_order).map((f) => ({ label: f.label, price: effectivePrice(v, f) }))
 }
-/** Classeur : pages à ajouter (en stock mais pas encore rangées) et à retirer (plus en stock, masquées ou archivées). */
-export function binderTodo(visuals) {
+/** Classeur : pages à ajouter (disponibles mais pas encore rangées) et à retirer (plus rien de libre, masquées ou archivées). */
+export function binderTodo(visuals, reservations = []) {
   const toAdd = [], toRemove = []
   for (const v of visuals) {
     const inside = Boolean(v.binder_added_at)
-    if (inside && !inCatalogue(v)) toRemove.push(v)
-    else if (!inside && inCatalogue(v)) toAdd.push(v)
+    if (inside && !inCatalogue(v, reservations)) toRemove.push(v)
+    else if (!inside && inCatalogue(v, reservations)) toAdd.push(v)
   }
   const byTitle = (a, b) => COLLATOR.compare(a.film.title, b.film.title) || a.reference_code.localeCompare(b.reference_code)
   return { toAdd: toAdd.sort(byTitle), toRemove: toRemove.sort(byTitle) }
@@ -1562,7 +1566,7 @@ function publicLink(v) {
 }
 const shortFormat = (label) => label.replace(/\s*format$/i, '')
 function formatPrices(formats) {
-  return html`<p class="prices">${formats.map((f, i) => html`${i ? html`<span> · </span>` : ''}${shortFormat(f.label)}${f.price_cents !== null && f.price_cents !== undefined ? ` ${formatPriceShort(f.price_cents)}` : ''}`)}</p>`
+  return html`<p class="prices">${formats.map((f, i) => html`${i ? html`<span> · </span>` : ''}${shortFormat(f.label)}`)}</p>`
 }
 const shortDay = (iso) => formatDay(iso, { day: 'numeric', month: 'short' })
 /** Badge de disponibilité : Disponible · Bientôt (date) · Toutes réservées. */
@@ -1665,8 +1669,8 @@ function syncPublicDetail(visualId) {
           ${v.upcoming ? html`<p style="color:var(--ink-2);font-size:14.5px">En vente à partir du <b>${formatDay(v.available_from)}</b>.
             ${v.formats.some((f) => f.free) ? html`<span style="color:#f5a26b;font-weight:700">Réservation possible dès maintenant en caisse.</span>` : 'Tous les exemplaires sont déjà réservés.'}</p>` : ''}</div>
         <section class="menu-prices" aria-label="Formats">
-          <ul>${v.formats.map((f) => html`<li><span>${f.label}${v.upcoming && !f.free ? html` <span class="muted small">(réservé)</span>` : ''}</span><span class="dots" aria-hidden="true"></span>
-            ${f.price_cents !== null && f.price_cents !== undefined ? html`<span class="price">${formatPriceShort(f.price_cents)}</span>` : html`<span class="muted small">${v.upcoming ? 'Bientôt' : 'Disponible'}</span>`}</li>`)}</ul>
+          <ul>${v.formats.map((f) => html`<li><span>${f.label}</span><span class="dots" aria-hidden="true"></span>
+            <span class="avail-word ${v.upcoming ? 'soon' : ''}">${v.upcoming ? (f.free ? 'Bientôt' : 'Réservé') : 'Disponible'}</span></li>`)}</ul>
         </section>
         <div class="ref-card"><div><p>Référence à indiquer à la caisse</p>${s.contact_note ? html`<p style="margin-top:2px;color:var(--ink-2)">${s.contact_note}</p>` : ''}</div><span class="code">${v.reference_code}</span></div>
         ${v.overview ? html`<p style="color:var(--ink-2);line-height:1.7;font-size:14.5px">${v.overview}</p>` : ''}
@@ -2702,7 +2706,7 @@ ADMIN_PAGES.dashboard = async (page) => {
   input.addEventListener('input', drawResults)
   $('[data-clear]', page).addEventListener('click', () => { input.value = ''; drawResults(); input.focus() })
   const drawBinder = () => {
-    const { toAdd, toRemove } = binderTodo(ADM.visuals)
+    const { toAdd, toRemove } = binderTodo(ADM.visuals, ADM.reservations)
     const add = toAdd.length && ADM.visuals.some((v) => v.binder_added_at)  // pas de rappel tant que le classeur n'a jamais été commencé
     setHTML($('[data-binder]', page), html`${binderRemoveHtml(toRemove, { compact: true })}
       ${add ? html`<a class="todo-card" style="margin-top:${toRemove.length ? 12 : 0}px" href="${A('/catalogue-papier')}">${icon('book')}<span class="grow">Classeur : ${plural(toAdd.length, 'page')} à imprimer et ajouter</span>${icon('chevR')}</a>` : ''}`)
@@ -2795,8 +2799,8 @@ ADMIN_PAGES.visual = async (page, { id }) => {
           </div>
           <div class="card pad row wrap" style="gap:10px;justify-content:space-between">
             <div><p style="font-weight:800">${icon('book')} Catalogue papier</p>
-              <p class="muted small">${v.binder_added_at ? `Page dans le classeur depuis le ${fmtDate(v.binder_added_at)}${inCatalogue(v) ? '' : ' : à retirer (plus en stock)'}` : inCatalogue(v) ? 'Page pas encore dans le classeur.' : 'Pas de page (aucun exemplaire en stock).'}</p></div>
-            ${inCatalogue(v) ? html`<button class="btn btn-secondary sm" data-act="catalogue">${icon('printer')} Page du catalogue</button>` : v.binder_added_at ? html`<button class="btn btn-secondary sm" data-binder-out="${v.id}">${icon('check')} Retirée du classeur</button>` : ''}</div>
+              <p class="muted small">${v.binder_added_at ? `Page dans le classeur depuis le ${fmtDate(v.binder_added_at)}${inCatalogue(v, ADM.reservations) ? '' : ' : à retirer (plus aucun exemplaire disponible)'}` : inCatalogue(v, ADM.reservations) ? 'Page pas encore dans le classeur.' : 'Pas de page : aucun exemplaire disponible (en stock et non réservé).'}</p></div>
+            ${inCatalogue(v, ADM.reservations) ? html`<button class="btn btn-secondary sm" data-act="catalogue">${icon('printer')} Page du catalogue</button>` : v.binder_added_at ? html`<button class="btn btn-secondary sm" data-binder-out="${v.id}">${icon('check')} Retirée du classeur</button>` : ''}</div>
           <section><div class="section-title"><h2 style="font-size:21px">Réservations clients${resas.length ? ` · ${resas.length}` : ''}</h2><button class="btn btn-primary sm" data-act="reserve" ${attr(!freeTotal, 'disabled')}>${icon('bookmark')} Réserver pour un client</button></div>
             ${resas.length ? html`<div class="resa-list">${resas.map((r) => resaCard(r, { showVisual: false }))}</div>` : html`<p class="muted small">${freeTotal ? 'Aucune réservation en cours.' : 'Aucun exemplaire libre à réserver.'}</p>`}</section>
           <section><div class="section-title"><h2 style="font-size:21px">Stock · ${plural(total, 'exemplaire')}</h2><button class="btn btn-primary sm" data-act="add">${icon('packagePlus')} Ajouter du stock</button></div>
@@ -3831,7 +3835,7 @@ function catalogueDoc(list, images, { prices = true } = {}) {
     let w = MAX_W, h = MAX_H
     if (im) { const k = Math.min(MAX_W / im.w, MAX_H / im.h); w = im.w * k; h = im.h * k }
     const poster = im ? { image: im.data, width: w, height: h } : { stack: [{ canvas: [{ type: 'rect', x: 0, y: 0, w: MAX_H * 2 / 3, h: MAX_H, lineWidth: 1, lineColor: LINE }] }, { text: 'Image indisponible', alignment: 'center', margin: [0, -MAX_H / 2 - 8, 0, 0], color: MUTED, fontSize: 12 }], width: MAX_H * 2 / 3 }
-    const fm = catalogueFormats(v, ADM.formats)
+    const fm = catalogueFormats(v, ADM.formats, ADM.reservations)
     const meta = [yearOf(v.film), v.film.director, v.label].filter(Boolean).join('   ·   ')
     const pill = (f) => ({
       table: { body: [[{ text: [{ text: f.label, bold: true }, ...(prices && f.price !== null && f.price !== undefined ? [{ text: `   ${formatPriceShort(f.price)}`, bold: true, color: INK }] : [])], fontSize: 14, margin: [10, 5, 10, 5] }]] },
@@ -3943,15 +3947,15 @@ function catalogueModal(list, title, after) {
 ADMIN_PAGES.catalogue = async (page) => {
   setHTML(page, html`${pageHead('Catalogue papier', 'Un classeur au comptoir pour les clients qui n’utilisent pas le téléphone : une page A4 par affiche en stock.')}<div data-body></div>`)
   const draw = () => {
-    const all = catalogueVisuals(ADM.visuals)
-    const { toAdd, toRemove } = binderTodo(ADM.visuals)
+    const all = catalogueVisuals(ADM.visuals, ADM.reservations)
+    const { toAdd, toRemove } = binderTodo(ADM.visuals, ADM.reservations)
     setHTML($('[data-body]', page), html`<div class="stack">
       <div class="grid2">
         <div class="card pad stack"><p class="eyebrow">Tout le catalogue</p><p class="display" style="font-size:26px;font-weight:600">${plural(all.length, 'page')}</p>
-          <p class="muted small">Toutes les affiches en stock, par ordre alphabétique (affiches « à venir » comprises).</p>
+          <p class="muted small">Toutes les affiches avec au moins un exemplaire disponible (non réservé), par ordre alphabétique, « à venir » comprises.</p>
           <button class="btn btn-primary block" data-all ${attr(!all.length, 'disabled')}>${icon('printer')} Imprimer tout le catalogue</button></div>
         <div class="card pad stack"><p class="eyebrow">Pages manquantes du classeur</p><p class="display" style="font-size:26px;font-weight:600">${plural(toAdd.length, 'page')}</p>
-          <p class="muted small">Affiches en stock dont la page n’a pas encore été rangée dans le classeur.</p>
+          <p class="muted small">Affiches disponibles dont la page n’a pas encore été rangée dans le classeur.</p>
           <button class="btn btn-accent block" data-add ${attr(!toAdd.length, 'disabled')}>${icon('printer')} Imprimer ces pages</button></div>
       </div>
       ${binderRemoveHtml(toRemove)}
@@ -3969,7 +3973,7 @@ function binderRemoveHtml(toRemove, { compact = false } = {}) {
   if (!toRemove.length) return ''
   return html`<div class="card pad stack" style="border-color:#f6cfb0;background:var(--accent-bg)">
     <p style="font-weight:800;color:#8a3d0e">${icon('bell')} ${plural(toRemove.length, 'page')} à retirer du classeur</p>
-    ${compact ? '' : html`<p class="small" style="color:#8a3d0e">Ces affiches ne sont plus en stock (ou plus proposées) : retirez leur page du classeur papier, puis validez.</p>`}
+    ${compact ? '' : html`<p class="small" style="color:#8a3d0e">Plus aucun exemplaire disponible (épuisées, toutes réservées, masquées) : retirez leur page du classeur papier, puis validez.</p>`}
     <div class="stack tight">${toRemove.map((v) => html`<div class="row" style="gap:10px;background:var(--surface);border-radius:12px;padding:8px 10px">
       <span style="width:34px;flex-shrink:0">${posterHtml(img.visual(v, 'thumb'), '')}</span>
       <span class="grow" style="min-width:0"><b class="clamp1">${v.film.title}</b><br><span class="xs muted"><span class="mono">${v.reference_code}</span>${v.label ? ` · ${v.label}` : ''}</span></span>
@@ -4089,9 +4093,9 @@ ADMIN_PAGES.settings = async (page) => {
           <div class="field"><label for="st-recent">Affiches « dernières ajoutées »</label><input class="input" id="st-recent" name="recent_count" type="number" min="0" max="24" value="${s.recent_count}" ${attr(!owner, 'disabled')}></div></div>
         ${owner ? html`<button class="btn btn-primary" style="align-self:flex-start" type="submit">Enregistrer</button>` : ''}</form>`)}
     ${section('Vitrine', 'Ce que voient les clients.', html`<div class="card pad stack">
-      ${switchHtml('show_prices', s.show_prices, 'Afficher les prix sur la vitrine', 'Masquez-les pour n’indiquer que la disponibilité.')}
+      <p class="hint">${icon('lock')} Les prix ne s’affichent jamais sur la vitrine en ligne : ils n’apparaissent que sur le catalogue papier.</p>
       ${switchHtml('show_recent', s.show_recent, 'Section « Dernières affiches ajoutées »')}</div>`)}
-    ${section('Formats et tarifs', 'Prix par défaut en euros, appliqués aux affiches sans prix personnalisé.', html`<div data-formats class="stack tight"></div>
+    ${section('Formats et tarifs', 'Prix par défaut en euros, appliqués aux affiches sans prix personnalisé. Ils figurent uniquement sur le catalogue papier.', html`<div data-formats class="stack tight"></div>
       <form class="row wrap" data-new-format><input class="input grow" style="min-width:200px" name="label" placeholder="Nouveau format (ex. Format 120 × 160)" aria-label="Nom du nouveau format"><button class="btn btn-secondary" type="submit">${icon('plus')} Ajouter un format</button></form>`)}
     ${section('Réservations clients', 'Délai laissé au client pour venir chercher son affiche, à partir du jour où elle est en vente.', html`<form class="card pad stack" data-resa-settings novalidate>
       <div class="grid2">
