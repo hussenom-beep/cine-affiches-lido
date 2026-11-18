@@ -178,6 +178,7 @@ p { margin: 0; }
 .resa.overdue { border-color: var(--danger-line); box-shadow: inset 4px 0 0 var(--danger); }
 .resa.to_notify, .resa.to_remind { border-color: #f6cfb0; box-shadow: inset 4px 0 0 var(--accent); }
 .resa .poster { border-radius: 8px; }
+.clamp1 { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .civ-select { width: 92px; flex-shrink: 0; padding: 0 30px 0 12px; background-position: right 8px center; font-weight: 700; }
 .resa-num { display: flex; align-items: center; justify-content: center; width: 58px; height: 58px; border-radius: 14px; background: var(--accent-bg); color: var(--accent-600); }
 .resa h3 { font-size: 15.5px; font-weight: 800; line-height: 1.25; }
@@ -842,10 +843,10 @@ export function buildInventoryRows(visuals, formats, locations, opts) {
       const l = lm.get(s.location_id)
       if (!f || !l) continue
       rows.push({ ...base, key: `${v.id}:${s.format_id}:${s.location_id}`, format: f.label, formatOrder: f.sort_order, quantity: s.quantity,
-        location: l.name, locationOrder: l.sort_order, price: opts.prices ? effectivePrice(v, f) : null, soldOut: false })
+        reserved: reservedQty(opts.reservations || [], s.id), location: l.name, locationOrder: l.sort_order, soldOut: false })
     }
     if (opts.scope === 'all' && lines.length === 0) {
-      rows.push({ ...base, key: `${v.id}:soldout`, format: '—', formatOrder: 999, quantity: 0, location: '—', locationOrder: 1e9, price: null, soldOut: true })
+      rows.push({ ...base, key: `${v.id}:soldout`, format: '—', formatOrder: 999, quantity: 0, reserved: 0, location: '—', locationOrder: 1e9, soldOut: true })
     }
   }
   const byTitle = (a, b) => COLLATOR.compare(a.title, b.title) || (a.year || 0) - (b.year || 0) || a.reference.localeCompare(b.reference) || a.formatOrder - b.formatOrder
@@ -854,12 +855,35 @@ export function buildInventoryRows(visuals, formats, locations, opts) {
     : byTitle(a, b) || COLLATOR.compare(a.location, b.location))
 }
 
+/* ── Catalogue papier et classeur ─────────────────────────────────────── */
+/** Affiches qui ont leur page dans le catalogue papier : publiées, avec au moins un exemplaire en stock. */
+export function inCatalogue(v) { return v.status === 'published' && v.stocks.some((s) => s.quantity > 0) }
+export function catalogueVisuals(visuals) {
+  return visuals.filter(inCatalogue).sort((a, b) => COLLATOR.compare(a.film.title, b.film.title) || (yearOf(a.film) || 0) - (yearOf(b.film) || 0) || a.reference_code.localeCompare(b.reference_code))
+}
+/** Formats à imprimer sur la page d'une affiche (ceux qui ont du stock), avec leur prix. */
+export function catalogueFormats(v, formats) {
+  return formats.filter((f) => f.is_active !== false && v.stocks.some((s) => s.format_id === f.id && s.quantity > 0))
+    .sort((a, b) => a.sort_order - b.sort_order).map((f) => ({ label: f.label, price: effectivePrice(v, f) }))
+}
+/** Classeur : pages à ajouter (en stock mais pas encore rangées) et à retirer (plus en stock, masquées ou archivées). */
+export function binderTodo(visuals) {
+  const toAdd = [], toRemove = []
+  for (const v of visuals) {
+    const inside = Boolean(v.binder_added_at)
+    if (inside && !inCatalogue(v)) toRemove.push(v)
+    else if (!inside && inCatalogue(v)) toAdd.push(v)
+  }
+  const byTitle = (a, b) => COLLATOR.compare(a.film.title, b.film.title) || a.reference_code.localeCompare(b.reference_code)
+  return { toAdd: toAdd.sort(byTitle), toRemove: toRemove.sort(byTitle) }
+}
+
 /* ── Adresses (routage) ──────────────────────────────────────────────── */
 export const ADMIN_BASE = '/espace-interne'
 const ADMIN_ROUTES = [
   ['', 'dashboard'], ['/stock', 'stock'], ['/reservations', 'reservations'], ['/ajouter', 'add'], ['/affiche/:id', 'visual'],
   ['/emplacements', 'locations'], ['/emplacements/:id', 'location'], ['/historique', 'history'],
-  ['/inventaire', 'inventory'], ['/reglages', 'settings'], ['/administrateurs', 'admins'],
+  ['/inventaire', 'inventory'], ['/catalogue-papier', 'catalogue'], ['/reglages', 'settings'], ['/administrateurs', 'admins'],
   ['/mot-de-passe-oublie', 'forgot'], ['/nouveau-mot-de-passe', 'recovery'], ['/activation', 'activation'],
   ['/initialisation', 'setup'],
 ]
@@ -1030,6 +1054,7 @@ const ICONS = {
   bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
   bookmark: '<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>',
   clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>',
 }
 const icon = (name, cls = '') => raw(`<svg class="icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ''}</svg>`)
 
@@ -1839,7 +1864,8 @@ const NAV = [
   ['reservations', '/reservations', 'bookmark', 'Réservations', 'Réservations'],
   ['locations', '/emplacements', 'pin', 'Emplacements'],
   ['history', '/historique', 'history', 'Historique', 'Historique'],
-  ['inventory', '/inventaire', 'printer', 'Inventaire PDF'],
+  ['catalogue', '/catalogue-papier', 'book', 'Catalogue papier'],
+  ['inventory', '/inventaire', 'printer', 'Liste de stock'],
   ['settings', '/reglages', 'settings', 'Réglages'],
   ['admins', '/administrateurs', 'users', 'Administrateurs', null, true],
 ]
@@ -2627,6 +2653,7 @@ ADMIN_PAGES.dashboard = async (page) => {
   setHTML(page, html`${pageHead('Tableau de bord', fmtDay(new Date()) + ' · ' + brandNames(ADM.settings).full)}
     <div class="stats" data-stats></div>
     <div data-todo></div>
+    <div data-binder style="margin-top:14px"></div>
     <a class="big-add" href="${A('/ajouter')}">${icon('plus')} Ajouter une affiche</a>
     <section class="section"><div class="section-title"><h2>Recherche rapide</h2></div>
       <div class="search">${icon('search')}<input class="input" type="search" data-q placeholder="Titre, année, référence (AF-0012), emplacement, format…" aria-label="Rechercher dans le stock" autocomplete="off">
@@ -2674,7 +2701,14 @@ ADMIN_PAGES.dashboard = async (page) => {
   }
   input.addEventListener('input', drawResults)
   $('[data-clear]', page).addEventListener('click', () => { input.value = ''; drawResults(); input.focus() })
-  const refresh = () => { drawStats(); drawTodo(); drawResults(); drawMoves() }
+  const drawBinder = () => {
+    const { toAdd, toRemove } = binderTodo(ADM.visuals)
+    const add = toAdd.length && ADM.visuals.some((v) => v.binder_added_at)  // pas de rappel tant que le classeur n'a jamais été commencé
+    setHTML($('[data-binder]', page), html`${binderRemoveHtml(toRemove, { compact: true })}
+      ${add ? html`<a class="todo-card" style="margin-top:${toRemove.length ? 12 : 0}px" href="${A('/catalogue-papier')}">${icon('book')}<span class="grow">Classeur : ${plural(toAdd.length, 'page')} à imprimer et ajouter</span>${icon('chevR')}</a>` : ''}`)
+  }
+  bindBinderActions($('[data-binder]', page), () => drawBinder())
+  const refresh = () => { drawStats(); drawTodo(); drawBinder(); drawResults(); drawMoves() }
   bindStockControls(page, refresh)
   ADM.refreshView = refresh
   refresh()
@@ -2759,6 +2793,10 @@ ADMIN_PAGES.visual = async (page, { id }) => {
               <div class="row wrap" style="gap:8px"><input class="input" id="v-from" type="date" value="${v.available_from || ''}" style="max-width:220px">${v.available_from ? html`<button class="btn btn-ghost sm" data-act="from-clear">En vente dès maintenant</button>` : ''}</div>
               <span class="hint">${isUpcoming(v) ? html`Vitrine : « Bientôt · dès le ${formatDay(v.available_from, { day: 'numeric', month: 'long' })} » avec « Réservation possible en caisse ». Vente impossible avant cette date.` : 'Laissez vide si l’affiche est vendable tout de suite. Sinon, elle reste réservable mais pas vendable avant la date.'}</span></div>
           </div>
+          <div class="card pad row wrap" style="gap:10px;justify-content:space-between">
+            <div><p style="font-weight:800">${icon('book')} Catalogue papier</p>
+              <p class="muted small">${v.binder_added_at ? `Page dans le classeur depuis le ${fmtDate(v.binder_added_at)}${inCatalogue(v) ? '' : ' : à retirer (plus en stock)'}` : inCatalogue(v) ? 'Page pas encore dans le classeur.' : 'Pas de page (aucun exemplaire en stock).'}</p></div>
+            ${inCatalogue(v) ? html`<button class="btn btn-secondary sm" data-act="catalogue">${icon('printer')} Page du catalogue</button>` : v.binder_added_at ? html`<button class="btn btn-secondary sm" data-binder-out="${v.id}">${icon('check')} Retirée du classeur</button>` : ''}</div>
           <section><div class="section-title"><h2 style="font-size:21px">Réservations clients${resas.length ? ` · ${resas.length}` : ''}</h2><button class="btn btn-primary sm" data-act="reserve" ${attr(!freeTotal, 'disabled')}>${icon('bookmark')} Réserver pour un client</button></div>
             ${resas.length ? html`<div class="resa-list">${resas.map((r) => resaCard(r, { showVisual: false }))}</div>` : html`<p class="muted small">${freeTotal ? 'Aucune réservation en cours.' : 'Aucun exemplaire libre à réserver.'}</p>`}</section>
           <section><div class="section-title"><h2 style="font-size:21px">Stock · ${plural(total, 'exemplaire')}</h2><button class="btn btn-primary sm" data-act="add">${icon('packagePlus')} Ajouter du stock</button></div>
@@ -2793,6 +2831,8 @@ ADMIN_PAGES.visual = async (page, { id }) => {
     $('[data-act="zoom"]', page).onclick = () => lightbox(img.visual(v, 'original'), v.label || f.title)
     $('[data-act="add"]', page).onclick = () => addStockSheet(v, {}, draw)
     $('[data-act="reserve"]', page).onclick = () => reserveSheet(v, draw)
+    const catBtn = $('[data-act="catalogue"]', page)
+    if (catBtn) catBtn.onclick = () => catalogueModal([v], 'Page du catalogue papier', draw)
     const fromInput = $('#v-from', page)
     const saveFrom = async (val) => {
       if ((val || null) === (v.available_from || null)) return
@@ -2854,6 +2894,7 @@ ADMIN_PAGES.visual = async (page, { id }) => {
   }
   bindStockControls(page, draw)
   bindResaActions(page, draw)
+  bindBinderActions(page, draw)
   ADM.refreshView = draw
   await draw()
 }
@@ -3637,7 +3678,7 @@ ADMIN_PAGES.add = async (page) => {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   Q. INVENTAIRE PDF (A4, miniatures ≈ 3 cm, cases de suivi au stylo)
+   Q. IMPRESSIONS : liste de stock (A4) et catalogue papier (une page par affiche)
    ═══════════════════════════════════════════════════════════════════════ */
 const THUMB_PX = { w: 120, h: 180 }
 async function fetchImageBlob(url, init = {}) {
@@ -3668,7 +3709,7 @@ async function decodeImage(blob) {
  *    sans autorisation « CORS », ce qui ferait échouer la lecture.
  * 2) En secours : relais du site (/api/image), réservé aux administrateurs.
  */
-async function thumbDataUrl(url, token) {
+async function imageDataUrl(url, token, { w: boxW, h: boxH, fit = 'cover', quality = 0.82 }) {
   let blob
   try { blob = await fetchImageBlob(url, { mode: 'cors', cache: 'no-store', credentials: 'omit' }) } catch {
     blob = await fetchImageBlob(`/api/image?src=${encodeURIComponent(url)}`, { headers: token ? { authorization: `Bearer ${token}` } : {} })
@@ -3677,14 +3718,19 @@ async function thumbDataUrl(url, token) {
   const w = bmp.width || bmp.naturalWidth, h = bmp.height || bmp.naturalHeight
   if (!w || !h) throw new Error('image vide')
   const c = document.createElement('canvas')
-  c.width = THUMB_PX.w; c.height = THUMB_PX.h
+  if (fit === 'cover') { c.width = boxW; c.height = boxH } else {
+    // « contain » : proportions d'origine, sans dépasser la boîte (et sans agrandir)
+    const k = Math.min(boxW / w, boxH / h, 1)
+    c.width = Math.round(w * k); c.height = Math.round(h * k)
+  }
   const ctx = c.getContext('2d')
   ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height)
-  const k = Math.max(c.width / w, c.height / h)
+  const k = fit === 'cover' ? Math.max(c.width / w, c.height / h) : c.width / w
   ctx.drawImage(bmp, (c.width - w * k) / 2, (c.height - h * k) / 2, w * k, h * k)
   bmp.close?.()
-  return c.toDataURL('image/jpeg', 0.82)
+  return { data: c.toDataURL('image/jpeg', quality), w: c.width, h: c.height }
 }
+const thumbDataUrl = async (url, token) => (await imageDataUrl(url, token, { w: THUMB_PX.w, h: THUMB_PX.h })).data
 async function prepareThumbs(rows, onProgress) {
   const ids = [...new Set(rows.map((r) => r.visualId))]
   const out = {}
@@ -3703,64 +3749,63 @@ async function prepareThumbs(rows, onProgress) {
   return out
 }
 
+/**
+ * Liste de stock : miniature (≈ 2 cm), film, format, emplacement, stock (dont réservés), case « Vu ».
+ * Tri alphabétique ou par emplacement (regroupé). Aucun prix (ils ne figurent que sur le catalogue papier).
+ */
 function inventoryDoc({ rows, opts, thumbs, scopeLabel }) {
   const s = ADM.settings
   const date = fmtDateTime(new Date())
   const copies = rows.reduce((a, r) => a + r.quantity, 0)
-  const INK = '#211d18', MUTED = '#6b6458', LINE = '#cfc6b6', DARK = '#17120c'
-  // pdfmake modifie les objets qu'il met en page : chaque case / ligne doit être un objet neuf.
-  const box = () => ({ canvas: [{ type: 'rect', x: 0, y: 1, w: 8.5, h: 8.5, lineWidth: 0.9, lineColor: INK }], width: 13 })
-  const writeLine = () => ({ canvas: [{ type: 'line', x1: 0, y1: 11, x2: 116, y2: 11, lineWidth: 0.5, lineColor: '#9b9386' }] })
-  const widths = [...(opts.thumbnails ? [62] : []), '*', 62, 30, 74, ...(opts.prices ? [44] : []), 124]
-  const head = [...(opts.thumbnails ? ['Visuel'] : []), 'Film · référence', 'Format', 'Qté', 'Emplacement', ...(opts.prices ? ['Prix'] : []), 'Suivi manuel']
-    .map((t, i, arr) => ({ text: t.toUpperCase(), style: 'th', alignment: t === 'Qté' ? 'center' : t === 'Prix' ? 'right' : 'left', ...(i === arr.length ? {} : {}) }))
+  const INK = '#211d18', MUTED = '#6b6458', LINE = '#d8cfbf', DARK = '#17120c', GOLD = '#a5823f', ORANGE = '#b9561a'
+  const byLocation = opts.sort === 'location'
+  const TW = 38, TH = 57  // miniature ≈ 1,3 × 2 cm
+  // pdfmake modifie les objets qu'il met en page : chaque case doit être un objet neuf.
+  const box = () => ({ canvas: [{ type: 'rect', x: 0, y: 0, w: 11, h: 11, r: 1.5, lineWidth: 1, lineColor: INK }], width: 11, alignment: 'center', margin: [6, 0, 0, 0] })
+  const widths = [...(opts.thumbnails ? [TW + 2] : []), '*', 70, ...(byLocation ? [] : [86]), 58, 26]
+  const head = [...(opts.thumbnails ? [''] : []), 'Film · référence', 'Format', ...(byLocation ? [] : ['Emplacement']), 'Stock', 'Vu']
+    .map((t) => ({ text: t.toUpperCase(), style: 'th', alignment: t === 'Stock' || t === 'Vu' ? 'center' : 'left' }))
   const ncol = head.length
   const body = [head]
   let group = null
   for (const r of rows) {
-    if (opts.sort === 'location' && r.location !== group) {
+    if (byLocation && r.location !== group) {
       group = r.location
-      const n = rows.filter((x) => x.location === group).reduce((a, x) => a + x.quantity, 0)
-      body.push([{ text: group === '—' ? 'Références épuisées' : `${group} · ${plural(n, 'exemplaire')}`, colSpan: ncol, style: 'group' }, ...Array(ncol - 1).fill({})])
+      const g = rows.filter((x) => x.location === group)
+      body.push([{ text: group === '—' ? 'Références épuisées' : `${group}   ·   ${plural(g.length, 'ligne')} · ${plural(g.reduce((a, x) => a + x.quantity, 0), 'exemplaire')}`, colSpan: ncol, style: 'group' }, ...Array(ncol - 1).fill({})])
     }
     const thumb = thumbs[r.visualId]
     const cells = []
-    if (opts.thumbnails) cells.push(thumb ? { image: thumb, width: 57, height: 85 } : { stack: [{ canvas: [{ type: 'rect', x: 0, y: 0, w: 57, h: 85, lineWidth: 0.6, lineColor: LINE, dash: { length: 3 } }] }, { text: 'Image\nindisponible', fontSize: 6, color: MUTED, margin: [0, -52, 0, 0], alignment: 'center' }], width: 57 })
+    if (opts.thumbnails) cells.push(thumb ? { image: thumb, width: TW, height: TH } : { canvas: [{ type: 'rect', x: 0, y: 0, w: TW, h: TH, lineWidth: 0.6, lineColor: LINE, dash: { length: 2 } }] })
     cells.push({ stack: [
       { text: r.title, bold: true, fontSize: 10 },
-      { text: r.year ? String(r.year) : 'Année inconnue', color: MUTED, fontSize: 8, margin: [0, 1, 0, 0] },
-      { text: r.reference, bold: true, fontSize: 8.5, margin: [0, 2, 0, 0], characterSpacing: 0.3 },
-      ...(r.label ? [{ text: r.label, color: MUTED, fontSize: 8 }] : []),
-      ...(r.hidden ? [{ text: 'Masquée dans la vitrine', color: '#7a5b29', fontSize: 7 }] : []),
-    ] })
-    cells.push({ text: r.format })
-    cells.push(r.soldOut ? { text: 'Épuisé', color: '#a3261f', bold: true, fontSize: 8, alignment: 'center' } : { text: String(r.quantity), bold: true, fontSize: 13, alignment: 'center' })
-    cells.push({ text: r.location })
-    if (opts.prices) cells.push({ text: r.price !== null && r.price !== undefined ? formatPrice(r.price) : '—', alignment: 'right' })
-    cells.push({ stack: [
-      { columns: [box(), { text: 'Réservé', width: 46 }, box(), { text: 'Retiré', width: 40 }], columnGap: 0, fontSize: 8.5 },
-      { text: 'Nom · date · remarque', fontSize: 6.5, color: MUTED, margin: [0, 5, 0, 0] },
-      writeLine(), ...(opts.thumbnails ? [writeLine(), writeLine()] : []),
-    ] })
+      { text: [{ text: r.reference, bold: true, color: GOLD, characterSpacing: 0.3 }, { text: `${r.year ? `  ·  ${r.year}` : ''}${r.label ? `  ·  ${r.label}` : ''}`, color: MUTED }], fontSize: 8, margin: [0, 2, 0, 0] },
+      ...(r.hidden ? [{ text: 'Masquée dans la vitrine', color: MUTED, italics: true, fontSize: 7.5 }] : []),
+    ], margin: [0, 4, 0, 0] })
+    cells.push({ text: r.format, margin: [0, 4, 0, 0] })
+    if (!byLocation) cells.push({ text: r.location, margin: [0, 4, 0, 0] })
+    cells.push(r.soldOut ? { text: 'Épuisé', color: '#a3261f', bold: true, fontSize: 8, alignment: 'center', margin: [0, 6, 0, 0] }
+      : { stack: [{ text: String(r.quantity), bold: true, fontSize: 13 }, ...(r.reserved ? [{ text: `dont ${r.reserved} rés.`, fontSize: 7, color: ORANGE, bold: true }] : [])], alignment: 'center', margin: [0, 2, 0, 0] })
+    cells.push({ stack: [box()], margin: [0, 6, 0, 0] })
     body.push(cells)
   }
   return {
-    pageSize: 'A4', pageMargins: [28, 74, 28, 42],
-    info: { title: `Inventaire des affiches — ${brandNames(s).full}`, author: brandNames(s).full },
+    pageSize: 'A4', pageMargins: [28, 74, 28, 40],
+    info: { title: `Stock des affiches — ${brandNames(s).full}`, author: brandNames(s).full },
     header: () => ({ margin: [28, 22, 28, 0], stack: [
       { columns: [
-        { stack: [{ text: 'Inventaire des affiches', fontSize: 15, bold: true, color: DARK }, { text: `${brandNames(s).full} · ${scopeLabel}`, fontSize: 8.5, color: MUTED, margin: [0, 2, 0, 0] }] },
-        { stack: [{ text: `Généré le ${date}`, fontSize: 8, color: MUTED }, { text: `${plural(rows.length, 'ligne')} · ${plural(copies, 'exemplaire')}`, fontSize: 8, color: MUTED }], alignment: 'right', width: 'auto' },
+        { stack: [{ text: byLocation ? 'Stock par emplacement' : 'Stock par ordre alphabétique', fontSize: 15, bold: true, color: DARK }, { text: `${brandNames(s).full} · ${scopeLabel}`, fontSize: 8.5, color: MUTED, margin: [0, 2, 0, 0] }] },
+        { stack: [{ text: `Imprimé le ${date}`, fontSize: 8, color: MUTED }, { text: `${plural(rows.length, 'ligne')} · ${plural(copies, 'exemplaire')}`, fontSize: 8, color: MUTED }], alignment: 'right', width: 'auto' },
       ] },
-      { canvas: [{ type: 'line', x1: 0, y1: 6, x2: 539, y2: 6, lineWidth: 1.6, lineColor: DARK }] },
+      { canvas: [{ type: 'line', x1: 0, y1: 6, x2: 539, y2: 6, lineWidth: 1.2, lineColor: GOLD }] },
     ] }),
-    footer: (p, n) => ({ margin: [28, 14, 28, 0], columns: [{ text: brandNames(s).full, fontSize: 7.5, color: MUTED }, { text: `Page ${p} / ${n}`, alignment: 'right', fontSize: 7.5, color: MUTED }] }),
+    footer: (p, n) => ({ margin: [28, 12, 28, 0], columns: [{ text: brandNames(s).full, fontSize: 7.5, color: MUTED }, { text: `Page ${p} / ${n}`, alignment: 'right', fontSize: 7.5, color: MUTED }] }),
     content: rows.length ? [{
       table: { headerRows: 1, dontBreakRows: true, widths, body },
       layout: {
-        fillColor: (i, node) => (i === 0 ? DARK : node.table.body[i]?.[0]?.style === 'group' ? '#efe8da' : i % 2 === 0 ? '#f7f3ec' : null),
+        fillColor: (i, node) => (i === 0 ? DARK : node.table.body[i]?.[0]?.style === 'group' ? '#f1e7d3' : null),
         hLineWidth: (i) => (i === 0 ? 0 : 0.6), vLineWidth: () => 0, hLineColor: () => LINE,
-        paddingLeft: () => 4, paddingRight: () => 4, paddingTop: () => 5, paddingBottom: () => 5,
+        paddingLeft: () => 4, paddingRight: () => 4, paddingTop: () => 4, paddingBottom: () => 4,
       },
     }] : [{ text: 'Aucune affiche ne correspond aux options choisies.', color: MUTED, margin: [0, 20, 0, 0] }],
     styles: { th: { bold: true, fontSize: 7.5, color: '#ffffff', characterSpacing: 0.4 }, group: { bold: true, fontSize: 10, color: DARK, margin: [0, 2, 0, 2] } },
@@ -3768,19 +3813,196 @@ function inventoryDoc({ rows, opts, thumbs, scopeLabel }) {
   }
 }
 
+/**
+ * Catalogue papier : une page A4 par affiche, pour les personnes qui n'utilisent pas le téléphone.
+ * Affiche en grand, titre, formats disponibles avec leur prix (jamais les quantités), référence en gros.
+ */
+function catalogueDoc(list, images, { prices = true } = {}) {
+  const s = ADM.settings
+  const n = brandNames(s)
+  const INK = '#17120c', MUTED = '#6b6152', GOLD = '#a5823f', ORANGE = '#c25a17', LINE = '#e3d6bd'
+  const today = formatDay(todayParis())
+  const pages = list.map((v, i) => {
+    const im = images[v.id]
+    // La page doit toujours tenir sur une seule feuille : l'affiche rapetisse un peu s'il y a plus de texte.
+    const hasOrig = v.film.original_title && v.film.original_title !== v.film.title
+    const MAX_W = 340
+    const MAX_H = 490 - (isUpcoming(v) ? 40 : 0) - (hasOrig ? 18 : 0) - (v.film.title.length > 34 ? 26 : 0) - (v.film.title.length > 50 ? 26 : 0) - (v.label && v.label.length > 40 ? 16 : 0)
+    let w = MAX_W, h = MAX_H
+    if (im) { const k = Math.min(MAX_W / im.w, MAX_H / im.h); w = im.w * k; h = im.h * k }
+    const poster = im ? { image: im.data, width: w, height: h } : { stack: [{ canvas: [{ type: 'rect', x: 0, y: 0, w: MAX_H * 2 / 3, h: MAX_H, lineWidth: 1, lineColor: LINE }] }, { text: 'Image indisponible', alignment: 'center', margin: [0, -MAX_H / 2 - 8, 0, 0], color: MUTED, fontSize: 12 }], width: MAX_H * 2 / 3 }
+    const fm = catalogueFormats(v, ADM.formats)
+    const meta = [yearOf(v.film), v.film.director, v.label].filter(Boolean).join('   ·   ')
+    const pill = (f) => ({
+      table: { body: [[{ text: [{ text: f.label, bold: true }, ...(prices && f.price !== null && f.price !== undefined ? [{ text: `   ${formatPriceShort(f.price)}`, bold: true, color: INK }] : [])], fontSize: 14, margin: [10, 5, 10, 5] }]] },
+      layout: { hLineWidth: () => 1.2, vLineWidth: () => 1.2, hLineColor: () => INK, vLineColor: () => INK },
+    })
+    return [
+      // Affiche encadrée d'un filet doré, centrée
+      { columns: [{ width: '*', text: '' }, { width: 'auto', table: { body: [[{ ...poster, margin: [0, 0, 0, 0] }]] },
+        layout: { hLineWidth: () => 1.5, vLineWidth: () => 1.5, hLineColor: () => GOLD, vLineColor: () => GOLD, paddingLeft: () => 0, paddingRight: () => 0, paddingTop: () => 0, paddingBottom: () => 0 } }, { width: '*', text: '' }], margin: [0, 4, 0, 0] },
+      { text: v.film.title, fontSize: v.film.title.length > 34 ? 22 : 27, bold: true, alignment: 'center', color: INK, margin: [0, 16, 0, 0] },
+      ...(hasOrig ? [{ text: v.film.original_title, italics: true, alignment: 'center', color: MUTED, fontSize: 12, margin: [0, 2, 0, 0] }] : []),
+      ...(meta ? [{ text: meta, alignment: 'center', color: MUTED, fontSize: 12, margin: [0, 5, 0, 0] }] : []),
+      ...(isUpcoming(v) ? [{ table: { widths: ['*'], body: [[{ text: [{ text: 'BIENTÔT   ', bold: true, characterSpacing: 1 }, `En vente à partir du ${formatDay(v.available_from)} · réservation possible en caisse`], fontSize: 11.5, color: '#ffffff', alignment: 'center', margin: [6, 5, 6, 5] }]] },
+        layout: { fillColor: () => ORANGE, hLineWidth: () => 0, vLineWidth: () => 0 }, margin: [30, 12, 30, 0] }] : []),
+      { columns: [{ width: '*', text: '' }, ...fm.map((f) => ({ width: 'auto', ...pill(f) })), { width: '*', text: '' }], columnGap: 12, margin: [0, 16, 0, 0] },
+      { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 0.8, lineColor: LINE }], margin: [0, 18, 0, 10] },
+      { columns: [
+        { stack: [{ text: 'RÉFÉRENCE À INDIQUER EN CAISSE', fontSize: 9, bold: true, color: MUTED, characterSpacing: 1 }, { text: v.reference_code, fontSize: 30, bold: true, color: ORANGE, characterSpacing: 1.5, margin: [0, 2, 0, 0] }] },
+        { text: 'Montrez cette page ou donnez la référence\nau comptoir : nous vous apportons l’affiche.', fontSize: 10.5, color: MUTED, alignment: 'right', margin: [0, 10, 0, 0], width: 'auto' },
+      ] },
+      ...(i < list.length - 1 ? [{ text: '', pageBreak: 'after' }] : []),
+    ]
+  })
+  return {
+    pageSize: 'A4', pageMargins: [40, 58, 40, 46],
+    info: { title: list.length === 1 ? `${list[0].film.title} — catalogue ${n.full}` : `Catalogue des affiches — ${n.full}`, author: n.full },
+    header: () => ({ margin: [40, 22, 40, 0], stack: [
+      { columns: [{ text: [{ text: `${n.catalog.toUpperCase()}  `, color: GOLD, characterSpacing: 3, fontSize: 9, bold: true }, { text: n.cinema.toUpperCase(), color: INK, characterSpacing: 2, fontSize: 11, bold: true }] },
+        { text: 'Catalogue des affiches', fontSize: 9, color: MUTED, alignment: 'right', margin: [0, 2, 0, 0] }] },
+      { canvas: [{ type: 'line', x1: 0, y1: 6, x2: 515, y2: 6, lineWidth: 1, lineColor: GOLD }] },
+    ] }),
+    footer: () => ({ margin: [40, 14, 40, 0], text: `Catalogue du ${today} · disponibilité à confirmer en caisse`, fontSize: 8.5, color: MUTED, alignment: 'center' }),
+    content: pages.flat(),
+    defaultStyle: { font: 'Roboto', fontSize: 11, color: INK, lineHeight: 1.15 },
+  }
+}
+
+/** Prépare les grandes images du catalogue (≈ 1100 px de haut : nettes à l'impression, PDF raisonnable). */
+async function prepareCatalogueImages(list, onProgress) {
+  const out = {}
+  const token = (await sb.auth.getSession()).data.session?.access_token
+  let i = 0, done = 0
+  const worker = async () => {
+    while (i < list.length) {
+      const v = list[i++]
+      const url = img.visual(v, 'large')
+      out[v.id] = url ? await imageDataUrl(url, token, { w: 740, h: 1110, fit: 'contain', quality: 0.86 }).catch((err) => { console.warn('[pdf] affiche indisponible', url, err?.message); return null }) : null
+      onProgress(++done, list.length)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(4, list.length) }, worker))
+  return out
+}
+
+/**
+ * Fenêtre d'impression du catalogue papier (une affiche, une sélection ou tout le catalogue).
+ * Après impression, un bouton marque les pages comme rangées dans le classeur.
+ */
+function catalogueModal(list, title, after) {
+  if (!list.length) return toast('Aucune affiche à imprimer.', 'info')
+  let url = null
+  const m = openModal({ title, size: 'sm',
+    body: html`<div class="stack">
+      <p class="muted small">${plural(list.length, 'page')} A4, une par affiche : l’affiche en grand, les formats disponibles et la référence à indiquer en caisse (jamais les quantités).</p>
+      ${switchHtml('cat-prices', true, 'Avec les prix', 'Les prix ne figurent que sur ce catalogue papier (tarifs des Réglages et prix personnalisés).')}
+      <button class="btn btn-primary lg block" data-gen>${icon('printer')} Créer le PDF</button>
+      <div class="hidden stack tight" data-progress><div class="progress"><div style="width:0%"></div></div><p class="xs muted" data-ptext></p></div>
+      <div class="hidden stack tight" data-ready><div class="alert success">PDF prêt.</div>
+        <a class="btn btn-primary block" data-dl download>${icon('download')} Télécharger</a>
+        <a class="btn btn-secondary block" data-open target="_blank" rel="noopener">${icon('external')} Ouvrir pour imprimer</a>
+        <div style="border-top:1px solid var(--line);padding-top:12px;margin-top:4px" class="stack tight">
+          <p class="small">Une fois les pages imprimées et rangées :</p>
+          <button class="btn btn-accent block" data-mark>${icon('check')} ${list.length > 1 ? `Marquer les ${list.length} pages comme ajoutées au classeur` : 'Marquer comme ajoutée au classeur'}</button></div></div>
+    </div>`,
+    onClose: () => { if (url) setTimeout(() => URL.revokeObjectURL(url), 60_000) } })
+  $('[data-gen]', m.el).onclick = (e) => busy(e.currentTarget, async () => {
+    const prog = $('[data-progress]', m.el), bar = $('.progress > div', m.el), text = $('[data-ptext]', m.el)
+    prog.classList.remove('hidden')
+    try {
+      text.textContent = 'Chargement du générateur PDF…'
+      const pdfMake = await loadPdfMake()
+      const images = await prepareCatalogueImages(list, (d, n) => { bar.style.width = `${Math.round((d / n) * 100)}%`; text.textContent = `Préparation des affiches ${d}/${n}…` })
+      const missing = Object.values(images).filter((x) => !x).length
+      if (missing) toast(`${plural(missing, 'affiche indisponible', 'affiches indisponibles')} : remplacée${missing > 1 ? 's' : ''} par un cadre avec le titre.`, 'info')
+      text.textContent = 'Mise en page…'
+      const blob = await new Promise((res, rej) => { try { pdfMake.createPdf(catalogueDoc(list, images, { prices: $('input[name="cat-prices"]', m.el).checked })).getBlob(res) } catch (err) { rej(err) } })
+      url = URL.createObjectURL(blob)
+      const name = list.length === 1 ? `catalogue-${list[0].reference_code}.pdf` : `catalogue-affiches-${todayParis()}.pdf`
+      Object.assign($('[data-dl]', m.el), { href: url, download: name })
+      $('[data-open]', m.el).href = url
+      $('[data-gen]', m.el).classList.add('hidden')
+      $('[data-ready]', m.el).classList.remove('hidden')
+    } catch (err) {
+      console.error(err)
+      toast('La création du PDF a échoué. Réessayez.', 'error')
+    } finally { prog.classList.add('hidden') }
+  })
+  $('[data-mark]', m.el).onclick = (e) => busy(e.currentTarget, async () => {
+    try {
+      await api.rpc('set_binder', { p_ids: list.map((v) => v.id), p_in: true })
+      for (const v of list) { const x = findVisual(v.id); if (x) x.binder_added_at = new Date().toISOString() }
+      m.close()
+      toast(list.length > 1 ? `${list.length} pages marquées dans le classeur.` : 'Page marquée dans le classeur.')
+      after?.()
+    } catch (err) { toast(errMsg(err), 'error') }
+  })
+}
+
+ADMIN_PAGES.catalogue = async (page) => {
+  setHTML(page, html`${pageHead('Catalogue papier', 'Un classeur au comptoir pour les clients qui n’utilisent pas le téléphone : une page A4 par affiche en stock.')}<div data-body></div>`)
+  const draw = () => {
+    const all = catalogueVisuals(ADM.visuals)
+    const { toAdd, toRemove } = binderTodo(ADM.visuals)
+    setHTML($('[data-body]', page), html`<div class="stack">
+      <div class="grid2">
+        <div class="card pad stack"><p class="eyebrow">Tout le catalogue</p><p class="display" style="font-size:26px;font-weight:600">${plural(all.length, 'page')}</p>
+          <p class="muted small">Toutes les affiches en stock, par ordre alphabétique (affiches « à venir » comprises).</p>
+          <button class="btn btn-primary block" data-all ${attr(!all.length, 'disabled')}>${icon('printer')} Imprimer tout le catalogue</button></div>
+        <div class="card pad stack"><p class="eyebrow">Pages manquantes du classeur</p><p class="display" style="font-size:26px;font-weight:600">${plural(toAdd.length, 'page')}</p>
+          <p class="muted small">Affiches en stock dont la page n’a pas encore été rangée dans le classeur.</p>
+          <button class="btn btn-accent block" data-add ${attr(!toAdd.length, 'disabled')}>${icon('printer')} Imprimer ces pages</button></div>
+      </div>
+      ${binderRemoveHtml(toRemove)}
+      <p class="hint">Pour une seule affiche : bouton « Page du catalogue » sur sa fiche. La couverture et le sommaire peuvent être faits à part (Canva…).</p></div>`)
+    $('[data-all]', page).onclick = () => catalogueModal(all, 'Imprimer tout le catalogue', draw)
+    $('[data-add]', page).onclick = () => catalogueModal(toAdd, 'Pages à ajouter au classeur', draw)
+  }
+  bindBinderActions(page, () => draw())
+  ADM.refreshView = draw
+  draw()
+}
+
+/** Pages à retirer du classeur (affiche plus en stock, masquée ou archivée) : validation une par une. */
+function binderRemoveHtml(toRemove, { compact = false } = {}) {
+  if (!toRemove.length) return ''
+  return html`<div class="card pad stack" style="border-color:#f6cfb0;background:var(--accent-bg)">
+    <p style="font-weight:800;color:#8a3d0e">${icon('bell')} ${plural(toRemove.length, 'page')} à retirer du classeur</p>
+    ${compact ? '' : html`<p class="small" style="color:#8a3d0e">Ces affiches ne sont plus en stock (ou plus proposées) : retirez leur page du classeur papier, puis validez.</p>`}
+    <div class="stack tight">${toRemove.map((v) => html`<div class="row" style="gap:10px;background:var(--surface);border-radius:12px;padding:8px 10px">
+      <span style="width:34px;flex-shrink:0">${posterHtml(img.visual(v, 'thumb'), '')}</span>
+      <span class="grow" style="min-width:0"><b class="clamp1">${v.film.title}</b><br><span class="xs muted"><span class="mono">${v.reference_code}</span>${v.label ? ` · ${v.label}` : ''}</span></span>
+      <button class="btn btn-secondary sm" data-binder-out="${v.id}">${icon('check')} Retirée</button></div>`)}</div></div>`
+}
+function bindBinderActions(root, after) {
+  root.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-binder-out]')
+    if (!b) return
+    busy(b, async () => {
+      try {
+        await api.rpc('set_binder', { p_ids: [b.dataset.binderOut], p_in: false })
+        const v = findVisual(b.dataset.binderOut); if (v) v.binder_added_at = null
+        toast('Page retirée du classeur : noté.')
+        after?.()
+      } catch (err) { toast(errMsg(err), 'error') }
+    })
+  })
+}
+
 ADMIN_PAGES.inventory = async (page) => {
   const preset = qs().get('emplacement')
-  const o = { scope: preset ? 'location' : 'all', locationId: preset || ADM.locations[0]?.id, thumbnails: ADM.settings.pdf_include_thumbnails, prices: ADM.settings.pdf_include_prices, sort: 'alpha' }
+  const o = { scope: preset ? 'location' : 'all', locationId: preset || ADM.locations[0]?.id, thumbnails: ADM.settings.pdf_include_thumbnails !== false, sort: preset ? 'alpha' : 'location' }
   let result = null
-  setHTML(page, html`${pageHead('Inventaire PDF', 'Document A4 imprimable (couleur ou noir et blanc) pour le comptage et le suivi au stylo.')}
+  setHTML(page, html`${pageHead('Liste de stock', 'Document A4 pour l’inventaire physique (case « Vu » à cocher) ou comme copie de secours. Pour les clients : le catalogue papier.')}
     <div class="split side-r">
       <div class="card pad stack">
         <div class="field"><span class="label">Contenu</span>${segHtml('scope', o.scope, [['all', 'Inventaire complet'], ['available', 'Disponibles'], ['location', 'Un emplacement']], 'block')}</div>
         <div class="field ${o.scope === 'location' ? '' : 'hidden'}" data-locfield><label for="inv-loc">Emplacement</label><select class="select" id="inv-loc">${ADM.locations.map((l) => html`<option value="${l.id}" ${attr(l.id === o.locationId, 'selected')}>${l.name}</option>`)}</select></div>
         <div class="field"><span class="label">Tri</span>${segHtml('sort', o.sort, [['alpha', 'Alphabétique'], ['location', 'Par emplacement']], 'block')}</div>
         <div class="stack tight" style="padding:14px;border:1px solid var(--line);border-radius:16px;background:var(--bg)">
-          ${switchHtml('thumbs', o.thumbnails, 'Avec miniatures', 'Environ 3 cm de haut par affiche.')}${switchHtml('prices', o.prices, 'Avec prix')}</div>
-        <p class="muted small">Chaque ligne comporte les cases <b>☐ Réservé</b> et <b>☐ Retiré</b> et une zone pour écrire un nom, une date ou une remarque. Une ligne n’est jamais coupée entre deux pages ; l’en-tête du tableau est répété sur chaque page.</p>
+          ${switchHtml('thumbs', o.thumbnails, 'Avec miniatures', 'Environ 2 cm de haut, pour reconnaître chaque affiche.')}</div>
+        <p class="muted small">Chaque ligne : film et référence, format, emplacement, stock (avec les exemplaires réservés) et une case <b>☐ Vu</b> à cocher pendant le comptage. Aucun prix. L’en-tête est répété sur chaque page.</p>
       </div>
       <aside><div class="card pad stack">${icon('printer')}
         <div><p class="display" style="font-size:26px;font-weight:600" data-count></p><p class="muted small" data-scope></p></div>
@@ -3791,7 +4013,7 @@ ADMIN_PAGES.inventory = async (page) => {
           <a class="btn btn-secondary block" data-open target="_blank" rel="noopener">${icon('external')} Ouvrir pour imprimer</a></div>
       </div></aside></div>`)
   const scopeLabel = () => (o.scope === 'all' ? 'Inventaire complet' : o.scope === 'available' ? 'Affiches disponibles' : `Emplacement : ${ADM.locations.find((l) => l.id === o.locationId)?.name || '?'}`)
-  const rows = () => buildInventoryRows(ADM.visuals, ADM.formats, ADM.locations, o)
+  const rows = () => buildInventoryRows(ADM.visuals, ADM.formats, ADM.locations, { ...o, reservations: ADM.reservations })
   const sync = () => {
     const r = rows()
     $('[data-count]', page).textContent = plural(r.length, 'ligne')
@@ -3806,7 +4028,6 @@ ADMIN_PAGES.inventory = async (page) => {
     if (e.target.closest('[data-seg="sort"]')) o.sort = e.detail
     if (e.target.id === 'inv-loc') o.locationId = e.target.value
     if (e.target.name === 'thumbs') o.thumbnails = e.target.checked
-    if (e.target.name === 'prices') o.prices = e.target.checked
     sync()
   })
   $('[data-gen]', page).onclick = (e) => busy(e.currentTarget, async () => {
@@ -3828,7 +4049,7 @@ ADMIN_PAGES.inventory = async (page) => {
       text.textContent = 'Mise en page du document…'
       const blob = await new Promise((res, rej) => { try { pdfMake.createPdf(inventoryDoc({ rows: r, opts: o, thumbs, scopeLabel: scopeLabel() })).getBlob(res) } catch (err) { rej(err) } })
       result = URL.createObjectURL(blob)
-      const name = `inventaire-affiches-${new Date().toISOString().slice(0, 10)}.pdf`
+      const name = `stock-affiches-${o.sort === 'location' ? 'par-emplacement' : 'alphabetique'}-${todayParis()}.pdf`
       Object.assign($('[data-dl]', page), { href: result, download: name })
       $('[data-open]', page).href = result
       $('[data-ready]', page).classList.remove('hidden')
@@ -3880,7 +4101,8 @@ ADMIN_PAGES.settings = async (page) => {
       <p class="hint">Les noms et numéros des clients sont effacés automatiquement 30 jours après la vente ou l’annulation de la réservation.</p>
       <button class="btn btn-primary" style="align-self:flex-start" type="submit">Enregistrer</button></form>`)}
     ${section('Emplacements', 'Zones de rangement physiques (privées).', html`<a class="card list-link" href="${A('/emplacements')}"><span class="ico">${icon('pin')}</span><span class="grow"><b>Gérer les emplacements</b><br><span class="muted small">${plural(ADM.locations.length, 'emplacement')}</span></span>${icon('chevR')}</a>`)}
-    ${section('Inventaire PDF', 'Options proposées par défaut.', html`<div class="card pad stack">${switchHtml('pdf_include_thumbnails', s.pdf_include_thumbnails, 'Miniatures des affiches')}${switchHtml('pdf_include_prices', s.pdf_include_prices, 'Colonne des prix')}</div>`)}
+    ${section('Impressions', 'Liste de stock et catalogue papier.', html`<div class="card pad stack">${switchHtml('pdf_include_thumbnails', s.pdf_include_thumbnails !== false, 'Miniatures dans la liste de stock', 'Environ 2 cm de haut par affiche.')}
+      <p class="hint">Les prix n’apparaissent que sur le <a class="link" href="${A('/catalogue-papier')}">catalogue papier</a>, jamais sur la liste de stock.</p></div>`)}
     ${section('QR code de la vitrine', 'À imprimer et afficher dans le hall du cinéma.', html`<div class="card pad qr-box"><div class="qr" data-qr><span class="spinner"></span></div>
       <div class="stack tight"><p class="mono small" style="word-break:break-all">${location.origin}/</p><p class="muted small">Les clients scannent ce code pour consulter les affiches disponibles, sans compte ni application. Il pointe vers l’adresse publique : il reste valable après le transfert de l’administration.</p>
         <div class="row wrap"><button class="btn btn-secondary sm" data-qr-png>${icon('download')} QR code (PNG)</button><button class="btn btn-primary sm" data-qr-pdf>${icon('printer')} Affichette à imprimer (PDF)</button></div></div></div>`)}
@@ -3905,7 +4127,7 @@ ADMIN_PAGES.settings = async (page) => {
   // Interrupteurs (vitrine, PDF)
   page.addEventListener('change', async (e) => {
     const n = e.target.name
-    if (['show_prices', 'show_recent', 'pdf_include_thumbnails', 'pdf_include_prices'].includes(n)) {
+    if (['show_prices', 'show_recent', 'pdf_include_thumbnails'].includes(n)) {
       if (!owner) { e.target.checked = !e.target.checked; return toast('Réglage réservé à l’administrateur principal.', 'error') }
       if (!(await saveSettings({ [n]: e.target.checked }))) e.target.checked = !e.target.checked
     }
