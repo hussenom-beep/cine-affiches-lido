@@ -1393,7 +1393,7 @@ const A = (p = '') => ADMIN_BASE + p
 /* ═══════════════════════════════════════════════════════════════════════
    E. VITRINE PUBLIQUE  (/  et  /affiche/:id)
    ═══════════════════════════════════════════════════════════════════════ */
-const PUB = { catalog: null, settings: null, mounted: false, signature: '', detail: null, limit: 24, timer: null, closingByRoute: false }
+const PUB = { catalog: null, settings: null, mounted: false, signature: '', detail: null, limit: 24, timer: null, closingByRoute: false, channel: null, live: false, stale: false }
 const PAGE_SIZE = 24
 
 const DEFAULT_ACCENT = '#e8772e'
@@ -1580,8 +1580,10 @@ function renderPublicResults(appendOnly = false) {
   const recent = PUB.settings.show_recent && PUB.settings.recent_count > 0 ? recentlyAdded(PUB.catalog, PUB.settings.recent_count) : []
   if (!searching && recent.length && !appendOnly) {
     recentBox.classList.remove('hidden')
+    const keepScroll = $('.carousel', recentBox)?.scrollLeft || 0  // actualisation en direct : le carrousel garde sa position
     setHTML(recentBox, html`<div class="section-title"><div><p class="pub-eyebrow">Nouveautés</p><h2 id="recent-h">Dernières arrivées</h2></div></div>
       <div class="carousel no-scrollbar">${recent.map((v, i) => html`<div>${posterCard(v, i, { ribbon: 'Nouveau' })}</div>`)}</div>`)
+    if (keepScroll) $('.carousel', recentBox).scrollLeft = keepScroll
   } else if (searching) recentBox.classList.add('hidden')
 
   const results = filterCatalog(PUB.catalog, { query, format, sort })
@@ -1656,17 +1658,54 @@ function syncPublicDetail(visualId) {
   $('[data-act="zoom"]', PUB.detail.el).addEventListener('click', () => lightbox(img.visual(v, 'original'), `Affiche : ${v.title}`))
 }
 
-/** Actualisation automatique : les ventes et retours en stock apparaissent sans recharger la page. */
+/**
+ * Vitrine en direct : chaque changement côté administration (vente, retour en stock, réservation,
+ * nouvelle affiche, prix…) envoie un simple signal « le catalogue a changé » sur le canal privé
+ * « vitrine » (aucune donnée dans le signal). La vitrine recharge alors le catalogue public.
+ * Personne d'autre que la base ne peut émettre sur ce canal. En secours : actualisation régulière.
+ */
+const LIVE_FALLBACK_MS = 20_000   // sans connexion temps réel
+const LIVE_SAFETY_MS = 120_000    // avec connexion temps réel (filet de sécurité)
+let liveTimer = null, lastLiveRefresh = 0
+async function refreshPublicNow() {
+  if (document.visibilityState !== 'visible' || currentRoute?.area !== 'public') { PUB.stale = true; return }
+  lastLiveRefresh = Date.now()
+  PUB.stale = false
+  const openId = currentRoute.params.visualId
+  const before = openId ? JSON.stringify(PUB.catalog?.find((v) => v.visual_id === openId) || null) : null
+  try {
+    if (!(await loadPublic(true))) return
+    fillPublicHeader()
+    renderPublicResults()
+    if (openId && JSON.stringify(PUB.catalog.find((v) => v.visual_id === openId) || null) !== before) syncPublicDetail(openId)
+  } catch { PUB.stale = true /* réseau momentanément indisponible : nouvel essai au prochain signal */ }
+}
+/** Regroupe les signaux rapprochés (une vente = plusieurs changements) : au plus une actualisation toutes les 2 s. */
+function scheduleLiveRefresh() {
+  clearTimeout(liveTimer)
+  const wait = Math.max(400, 2000 - (Date.now() - lastLiveRefresh))
+  liveTimer = setTimeout(refreshPublicNow, wait)
+}
 function startPublicRefresh() {
   clearInterval(PUB.timer)
-  const tick = async () => {
-    if (document.visibilityState !== 'visible' || currentRoute?.area !== 'public') return
+  const arm = () => { clearInterval(PUB.timer); PUB.timer = setInterval(refreshPublicNow, PUB.live ? LIVE_SAFETY_MS : LIVE_FALLBACK_MS) }
+  if (!PUB.channel && sb) {
     try {
-      if (await loadPublic(true)) { fillPublicHeader(); renderPublicResults(); if (currentRoute.params.visualId && !PUB.catalog.some((v) => v.visual_id === currentRoute.params.visualId)) syncPublicDetail(currentRoute.params.visualId) }
-    } catch { /* réseau momentanément indisponible : nouvel essai au prochain passage */ }
+      PUB.channel = sb.channel('vitrine', { config: { private: true } })
+        .on('broadcast', { event: 'catalogue' }, scheduleLiveRefresh)
+        .subscribe((status) => {
+          const live = status === 'SUBSCRIBED'
+          if (live && PUB.live === false) scheduleLiveRefresh()  // reconnexion : rattraper ce qui a pu être manqué
+          PUB.live = live
+          arm()
+        })
+    } catch { PUB.live = false }
   }
-  PUB.timer = setInterval(tick, 60_000)
-  document.addEventListener('visibilitychange', tick)
+  arm()
+  const wake = () => { if (document.visibilityState === 'visible' && (PUB.stale || Date.now() - lastLiveRefresh > 10_000)) scheduleLiveRefresh() }
+  document.addEventListener('visibilitychange', wake)
+  window.addEventListener('focus', wake)
+  window.addEventListener('online', scheduleLiveRefresh)
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
